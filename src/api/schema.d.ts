@@ -67,6 +67,14 @@ export interface components {
         MeResponse: {
             email?: string;
         };
+        ProblemDetail: {
+            type?: string;
+            title?: string;
+            status?: number;
+            detail?: string;
+            instance?: string;
+            code?: string;
+        }
     };
     responses: never;
     parameters: never;
