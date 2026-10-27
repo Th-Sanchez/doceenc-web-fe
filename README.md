@@ -1,7 +1,7 @@
 # doceenc-web
 
 Frontend of the Doceenc system: a small web app that lets a home bakery owner track ingredient prices,
-recipe costs and product margins. It talks to [`doceenc-core-api`](../doceenc-core-api) (Spring Boot).
+recipe costs and product margins. It talks to [`doceenc-core-api`](https://github.com/Th-Sanchez/doceenc-core-api) (Spring Boot).
 
 **Stack:** React 19 · TypeScript · Vite · React Router · TanStack Query · Tailwind CSS v4 ·
 shadcn/ui-style components · React Hook Form + Zod · `openapi-typescript` / `openapi-fetch` ·
