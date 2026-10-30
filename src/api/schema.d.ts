@@ -74,6 +74,7 @@ export interface components {
             detail?: string;
             instance?: string;
             code?: string;
+            retryAfterSeconds?: number;
         }
     };
     responses: never;

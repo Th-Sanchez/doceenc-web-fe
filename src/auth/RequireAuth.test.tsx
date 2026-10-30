@@ -11,7 +11,7 @@ describe("route protection", () => {
     mockSession(null);
     renderApp("/");
 
-    expect(await screen.findByRole("heading", { name: "Entrar" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Entrar na sua conta" })).toBeInTheDocument();
   });
 
   it("shows the app to a logged-in user", async () => {
@@ -48,7 +48,7 @@ describe("route protection", () => {
 
     await userEvent.setup().click(await screen.findByRole("button", { name: "Sair" }));
 
-    expect(await screen.findByRole("heading", { name: "Entrar" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Entrar na sua conta" })).toBeInTheDocument();
     expect(requiredHeader).toBeTruthy();
   });
 
@@ -59,6 +59,6 @@ describe("route protection", () => {
 
     await userEvent.setup().click(await screen.findByRole("button", { name: "Sair" }));
 
-    expect(await screen.findByRole("heading", { name: "Entrar" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { name: "Entrar na sua conta" })).toBeInTheDocument();
   });
 });

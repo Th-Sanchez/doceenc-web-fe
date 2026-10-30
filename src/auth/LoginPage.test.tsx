@@ -8,9 +8,9 @@ import { server } from "@/test/server";
 
 async function fillAndSubmit(email: string, password: string) {
   const user = userEvent.setup();
-  if (email) await user.type(screen.getByLabelText("E-mail"), email);
-  if (password) await user.type(screen.getByLabelText("Senha"), password);
-  await user.click(screen.getByRole("button", { name: "Entrar" }));
+  if (email) await user.type(screen.getByLabelText("E-mail de acesso"), email);
+  if (password) await user.type(screen.getByLabelText("Sua senha secreta"), password);
+  await user.click(screen.getByRole("button", { name: "Entrar na Confeitaria" }));
 }
 
 describe("LoginPage", () => {
