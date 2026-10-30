@@ -10,7 +10,7 @@ import bakeryIcon from "@/assets/login-bakery.svg";
 import costIcon from "@/assets/login-cost.svg";
 import emailIcon from "@/assets/login-email.svg";
 import eyeIcon from "@/assets/login-eye.svg";
-import googleIcon from "@/assets/login-google.svg";
+// import googleIcon from "@/assets/login-google.svg";
 import heartIcon from "@/assets/login-heart.svg";
 import heroImage from "@/assets/login-hero.png";
 import lockIcon from "@/assets/login-lock.svg";
