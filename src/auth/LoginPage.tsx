@@ -282,14 +282,14 @@ export function LoginPage() {
                 <img src={arrowIcon} alt="" />
               </Button>
 
-              <div className="relative flex w-full items-center justify-center pt-1">
+              {/* <div className="relative flex w-full items-center justify-center pt-1">
                 <div className="h-px w-full bg-[#e4e2df]" />
                 <span className="absolute bg-white px-3 text-[11px] font-bold leading-[14px] tracking-[0.55px] text-[#877275]">
                   {messages.login.or}
                 </span>
-              </div>
+              </div> */}
 
-              <button
+              {/* <button
                 type="button"
                 disabled
                 title={messages.login.googleUnavailable}
@@ -297,16 +297,16 @@ export function LoginPage() {
               >
                 <img src={googleIcon} alt="" />
                 {messages.login.google}
-              </button>
+              </button> */}
             </form>
           </div>
 
           <div className="flex w-full flex-col items-start pt-8">
             <div className="flex w-full flex-col items-center gap-4 pt-4 text-center">
-              <p className="text-sm leading-5 text-[#554245]">
+              {/* <p className="text-sm leading-5 text-[#554245]">
                 {messages.login.noAccount}{" "}
                 <span className="font-semibold text-[#802740]">{messages.login.createAccount}</span>
-              </p>
+              </p> */}
               <div className="flex w-full items-center justify-center gap-1.5 rounded-lg bg-[#f5f3f0] p-3 text-center text-xs leading-4 text-[#554245]">
                 <img src={heartIcon} alt="" />
                 {messages.login.footerNote}
