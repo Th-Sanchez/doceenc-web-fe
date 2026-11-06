@@ -495,7 +495,11 @@
           "name": {
             "type": "string"
           }
-        }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
       },
       "IngredientResponse": {
         "type": "object",
@@ -508,7 +512,10 @@
             "type": "string"
           },
           "brandSupplier": {
-            "type": "string"
+            "type": [
+              "string",
+              "null"
+            ]
           },
           "category": {
             "$ref": "#/components/schemas/CategorySummary"
@@ -531,16 +538,35 @@
             "type": "number"
           },
           "lastPurchasedOn": {
-            "type": "string",
+            "type": [
+              "string",
+              "null"
+            ],
             "format": "date"
           },
           "variationPercent": {
-            "type": "number"
+            "type": [
+              "number",
+              "null"
+            ]
           },
           "active": {
             "type": "boolean"
           }
-        }
+        },
+        "required": [
+          "active",
+          "baseUnit",
+          "brandSupplier",
+          "category",
+          "id",
+          "lastPurchasedOn",
+          "name",
+          "packagePrice",
+          "packageQuantity",
+          "unitPrice",
+          "variationPercent"
+        ]
       },
       "UpdateCategoryRequest": {
         "type": "object",
@@ -572,7 +598,12 @@
               "RECIPE"
             ]
           }
-        }
+        },
+        "required": [
+          "id",
+          "name",
+          "type"
+        ]
       },
       "CreateIngredientRequest": {
         "type": "object",
@@ -707,7 +738,15 @@
             "type": "string",
             "format": "date-time"
           }
-        }
+        },
+        "required": [
+          "createdAt",
+          "id",
+          "packagePrice",
+          "packageQuantity",
+          "purchasedOn",
+          "unitPrice"
+        ]
       },
       "MeResponse": {
         "type": "object",
@@ -715,7 +754,10 @@
           "email": {
             "type": "string"
           }
-        }
+        },
+        "required": [
+          "email"
+        ]
       }
     },
     "securitySchemes": {

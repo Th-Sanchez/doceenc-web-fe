@@ -8,10 +8,11 @@ export const categoryKeys = {
   ingredient: () => [...categoryKeys.all, "INGREDIENT"] as const,
 };
 
-export function useIngredientCategories() {
+export function useIngredientCategories(enabled = true) {
   return useQuery({
     queryKey: categoryKeys.ingredient(),
     queryFn: () => unwrap(api.GET("/api/v1/categories", { params: { query: { type: "INGREDIENT" } } })),
+    enabled,
   });
 }
 

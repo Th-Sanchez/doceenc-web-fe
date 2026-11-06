@@ -79,3 +79,10 @@ export function paginate<T>(items: T[], page: number, pageSize: number): Page<T>
   const start = (current - 1) * pageSize;
   return { items: items.slice(start, start + pageSize), page: current, pageCount, total: items.length };
 }
+
+/** An archived ingredient with the same identity (name + brand, case-insensitive), as the server sees it. */
+export function findArchivedTwin(items: Ingredient[], name: string, brandSupplier: string): Ingredient | null {
+  const key = (n: string, b: string | null) => `${n.trim().toLowerCase()}|${(b ?? "").trim().toLowerCase()}`;
+  const wanted = key(name, brandSupplier);
+  return items.find((ingredient) => !ingredient.active && key(ingredient.name, ingredient.brandSupplier) === wanted) ?? null;
+}

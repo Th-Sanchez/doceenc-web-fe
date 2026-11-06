@@ -57,3 +57,12 @@ export const useRestoreIngredient = () =>
   useIngredientMutation((id: string) =>
     unwrap(api.POST("/api/v1/ingredients/{id}/restore", { params: { path: { id } } })),
   );
+
+/** One ingredient, read from the catalog cache (there is no GET by id: the list already has everything). */
+export function useIngredient(id: string | undefined) {
+  return useQuery({
+    queryKey: ingredientKeys.list(),
+    queryFn: () => unwrap(api.GET("/api/v1/ingredients")),
+    select: (all) => all.find((ingredient) => ingredient.id === id) ?? null,
+  });
+}

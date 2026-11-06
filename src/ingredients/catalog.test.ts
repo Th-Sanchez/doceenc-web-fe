@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { Ingredient } from "@/api/types";
 import {
-  availableIngredients, countByCategory, filterIngredients, paginate, sortIngredients,
+  availableIngredients, categoryChips, filterIngredients, paginate, sortIngredients, findArchivedTwin
 } from "./catalog";
 
 function ingredient(overrides: Partial<Ingredient> = {}): Ingredient {
@@ -107,5 +107,18 @@ describe("paginate", () => {
     expect(paginate(items, 99, 6).page).toBe(3);
     expect(paginate(items, 0, 6).page).toBe(1);
     expect(paginate([], 1, 6)).toEqual({ items: [], page: 1, pageCount: 1, total: 0 });
+  });
+});
+
+describe("findArchivedTwin", () => {
+  const archived = ingredient({ name: "Farinha de trigo", brandSupplier: null, active: false });
+
+  it("matches name and brand ignoring case, treating a missing brand as empty", () => {
+    expect(findArchivedTwin([archived], " FARINHA DE TRIGO ", "")).toBe(archived);
+  });
+
+  it("ignores active ingredients and other brands", () => {
+    expect(findArchivedTwin([ingredient({ name: "Farinha de trigo" })], "Farinha de trigo", "")).toBeNull();
+    expect(findArchivedTwin([archived], "Farinha de trigo", "Dona Benta")).toBeNull();
   });
 });

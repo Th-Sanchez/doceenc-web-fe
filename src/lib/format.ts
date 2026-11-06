@@ -42,7 +42,7 @@ export const toIsoDate = (date: Date) =>
   `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
 
 function parseIsoDate(iso: string): Date {
-  const [year, month, day] = iso.split("-").map(Number);
+  const [year = 0, month = 1, day = 1] = iso.split("-").map(Number);
   return new Date(year, month - 1, day);
 }
 

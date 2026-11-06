@@ -1,4 +1,4 @@
-import { Plus, Search } from "lucide-react";
+import { Plus, Search, Tag } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Link } from "react-router";
 import type { Ingredient } from "@/api/types";
@@ -18,6 +18,7 @@ import {
 import { IngredientCards, IngredientTable } from "./IngredientList";
 import { Pagination } from "./Pagination";
 import { useIngredients, useRestoreIngredient } from "./queries";
+import { CategoriesDialog } from "@/categories/CategoriesDialog";
 
 const PAGE_SIZE = 6;
 const t = messages.ingredients;
@@ -53,6 +54,7 @@ export function IngredientsPage() {
   const restore = useRestoreIngredient();
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
+  const [categoriesOpen, setCategoriesOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [categoryId, setCategoryId] = useState<string | null>(null);
   const [showArchived, setShowArchived] = useState(false);
@@ -157,15 +159,21 @@ export function IngredientsPage() {
                 <option value="recent">{t.sort.recent}</option>
               </Select>
             </div>
-            <div role="group" aria-label={t.categories} className="flex flex-wrap gap-2">
-              <Chip selected={activeCategory === null} onClick={() => onCategory(null)}>
-                {`${t.allCategories} (${available.length})`}
-              </Chip>
-              {chips.map((chip) => (
-                <Chip key={chip.id} selected={activeCategory === chip.id} onClick={() => onCategory(chip.id)}>
-                  {`${chip.name} (${chip.count})`}
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div role="group" aria-label={t.categoryFilter} className="flex flex-wrap gap-2">
+                <Chip selected={activeCategory === null} onClick={() => onCategory(null)}>
+                  {`${t.allCategories} (${available.length})`}
                 </Chip>
-              ))}
+                {chips.map((chip) => (
+                  <Chip key={chip.id} selected={activeCategory === chip.id} onClick={() => onCategory(chip.id)}>
+                    {`${chip.name} (${chip.count})`}
+                  </Chip>
+                ))}
+              </div>
+              <Button variant="outline" size="sm" onClick={() => setCategoriesOpen(true)}>
+                <Tag aria-hidden className="size-4" />
+                {t.categories}
+              </Button>
             </div>
           </div>
 
@@ -193,6 +201,7 @@ export function IngredientsPage() {
       )}
 
       <ArchiveDialog ingredient={toArchive} onClose={() => setToArchive(null)} />
+      <CategoriesDialog open={categoriesOpen} onOpenChange={setCategoriesOpen} />
     </div>
   );
 }

@@ -179,34 +179,34 @@ export interface components {
         };
         CategorySummary: {
             /** Format: uuid */
-            id?: string;
-            name?: string;
+            id: string;
+            name: string;
         };
         IngredientResponse: {
             /** Format: uuid */
-            id?: string;
-            name?: string;
-            brandSupplier?: string;
-            category?: components["schemas"]["CategorySummary"];
+            id: string;
+            name: string;
+            brandSupplier: string | null;
+            category: components["schemas"]["CategorySummary"];
             /** @enum {string} */
-            baseUnit?: "GRAM" | "MILLILITER" | "UNIT";
-            packagePrice?: number;
-            packageQuantity?: number;
-            unitPrice?: number;
+            baseUnit: "GRAM" | "MILLILITER" | "UNIT";
+            packagePrice: number;
+            packageQuantity: number;
+            unitPrice: number;
             /** Format: date */
-            lastPurchasedOn?: string;
-            variationPercent?: number;
-            active?: boolean;
+            lastPurchasedOn: string | null;
+            variationPercent: number | null;
+            active: boolean;
         };
         UpdateCategoryRequest: {
             name: string;
         };
         CategoryResponse: {
             /** Format: uuid */
-            id?: string;
-            name?: string;
+            id: string;
+            name: string;
             /** @enum {string} */
-            type?: "INGREDIENT" | "RECIPE";
+            type: "INGREDIENT" | "RECIPE";
         };
         CreateIngredientRequest: {
             name: string;
@@ -237,17 +237,17 @@ export interface components {
         };
         PriceHistoryResponse: {
             /** Format: uuid */
-            id?: string;
-            packagePrice?: number;
-            packageQuantity?: number;
-            unitPrice?: number;
+            id: string;
+            packagePrice: number;
+            packageQuantity: number;
+            unitPrice: number;
             /** Format: date */
-            purchasedOn?: string;
+            purchasedOn: string;
             /** Format: date-time */
-            createdAt?: string;
+            createdAt: string;
         };
         MeResponse: {
-            email?: string;
+            email: string;
         };
         ProblemDetail: {
             type?: string;
@@ -257,7 +257,7 @@ export interface components {
             instance?: string;
             code?: string;
             retryAfterSeconds?: number;
-        }
+        };
     };
     responses: never;
     parameters: never;
