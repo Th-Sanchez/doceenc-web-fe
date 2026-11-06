@@ -17,6 +17,388 @@
     }
   ],
   "paths": {
+    "/api/v1/ingredients/{id}": {
+      "put": {
+        "tags": [
+          "ingredient-controller"
+        ],
+        "operationId": "update",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateIngredientRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/IngredientResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/categories/{id}": {
+      "put": {
+        "tags": [
+          "category-controller"
+        ],
+        "operationId": "update_1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCategoryRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "category-controller"
+        ],
+        "operationId": "delete",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/api/v1/ingredients": {
+      "get": {
+        "tags": [
+          "ingredient-controller"
+        ],
+        "operationId": "list",
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "active",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/IngredientResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "ingredient-controller"
+        ],
+        "operationId": "create",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateIngredientRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/IngredientResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/ingredients/{id}/restore": {
+      "post": {
+        "tags": [
+          "ingredient-controller"
+        ],
+        "operationId": "restore",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/IngredientResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/ingredients/{id}/prices": {
+      "get": {
+        "tags": [
+          "ingredient-controller"
+        ],
+        "operationId": "priceHistory",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PriceHistoryResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "ingredient-controller"
+        ],
+        "operationId": "registerPurchase",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PriceRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/IngredientResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/ingredients/{id}/archive": {
+      "post": {
+        "tags": [
+          "ingredient-controller"
+        ],
+        "operationId": "archive",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/IngredientResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/categories": {
+      "get": {
+        "tags": [
+          "category-controller"
+        ],
+        "operationId": "list_1",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "INGREDIENT",
+                "RECIPE"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CategoryResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "category-controller"
+        ],
+        "operationId": "create_1",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCategoryRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/auth/logout": {
       "post": {
         "tags": [
@@ -80,6 +462,238 @@
   },
   "components": {
     "schemas": {
+      "UpdateIngredientRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 0
+          },
+          "brandSupplier": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 0
+          },
+          "categoryId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "categoryId",
+          "name"
+        ]
+      },
+      "CategorySummary": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
+      "IngredientResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "brandSupplier": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "category": {
+            "$ref": "#/components/schemas/CategorySummary"
+          },
+          "baseUnit": {
+            "type": "string",
+            "enum": [
+              "GRAM",
+              "MILLILITER",
+              "UNIT"
+            ]
+          },
+          "packagePrice": {
+            "type": "number"
+          },
+          "packageQuantity": {
+            "type": "number"
+          },
+          "unitPrice": {
+            "type": "number"
+          },
+          "lastPurchasedOn": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date"
+          },
+          "variationPercent": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "active": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "active",
+          "baseUnit",
+          "brandSupplier",
+          "category",
+          "id",
+          "lastPurchasedOn",
+          "name",
+          "packagePrice",
+          "packageQuantity",
+          "unitPrice",
+          "variationPercent"
+        ]
+      },
+      "UpdateCategoryRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 80,
+            "minLength": 0
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "CategoryResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "INGREDIENT",
+              "RECIPE"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "type"
+        ]
+      },
+      "CreateIngredientRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 0
+          },
+          "brandSupplier": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 0
+          },
+          "categoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "baseUnit": {
+            "type": "string",
+            "enum": [
+              "GRAM",
+              "MILLILITER",
+              "UNIT"
+            ]
+          },
+          "price": {
+            "$ref": "#/components/schemas/PriceRequest"
+          }
+        },
+        "required": [
+          "baseUnit",
+          "categoryId",
+          "name",
+          "price"
+        ]
+      },
+      "PriceRequest": {
+        "type": "object",
+        "properties": {
+          "packagePrice": {
+            "type": "number",
+            "minimum": 0.01
+          },
+          "packageQuantity": {
+            "type": "number",
+            "minimum": 0.01
+          },
+          "unit": {
+            "type": "string",
+            "enum": [
+              "G",
+              "KG",
+              "ML",
+              "L",
+              "UNIT"
+            ]
+          },
+          "purchasedOn": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        "required": [
+          "packagePrice",
+          "packageQuantity",
+          "unit"
+        ]
+      },
+      "CreateCategoryRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 80,
+            "minLength": 0
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "INGREDIENT",
+              "RECIPE"
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "type"
+        ]
+      },
       "LoginRequest": {
         "type": "object",
         "properties": {
@@ -100,13 +714,50 @@
           "password"
         ]
       },
+      "PriceHistoryResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "packagePrice": {
+            "type": "number"
+          },
+          "packageQuantity": {
+            "type": "number"
+          },
+          "unitPrice": {
+            "type": "number"
+          },
+          "purchasedOn": {
+            "type": "string",
+            "format": "date"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "createdAt",
+          "id",
+          "packagePrice",
+          "packageQuantity",
+          "purchasedOn",
+          "unitPrice"
+        ]
+      },
       "MeResponse": {
         "type": "object",
         "properties": {
           "email": {
             "type": "string"
           }
-        }
+        },
+        "required": [
+          "email"
+        ]
       }
     },
     "securitySchemes": {

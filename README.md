@@ -71,9 +71,14 @@ In production the frontend and the API must share the same site (for example `ap
 src/
   api/       OpenAPI client, generated types, error model
   app/       routes and query client wiring
+  assets/
   auth/      session hooks, login page, route protection
   components/ui/   shadcn/ui-style building blocks
-  layout/    app shell with navigation (each slice adds its entries)
   i18n/      user-facing texts (pt-BR) and error-code mapping
+  layout/    app shell with navigation (each slice adds its entries)
+  lib/
+  pages/
   test/      MSW server and test helpers
+  index.css
+  main.tsx
 ```
