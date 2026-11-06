@@ -13,13 +13,21 @@ export function availableIngredients(all: Ingredient[], showArchived: boolean): 
   return showArchived ? all : all.filter((ingredient) => ingredient.active);
 }
 
-/** Category chip counters: they follow the archived toggle but not the search, so the chips stay stable while typing. */
-export function countByCategory(items: Ingredient[]): Map<string, number> {
-  const counts = new Map<string, number>();
+export interface CategoryChip {
+  id: string;
+  name: string;
+  count: number;
+}
+
+/** Chips follow the archived toggle but not the search, so they stay stable while typing. */
+export function categoryChips(items: Ingredient[]): CategoryChip[] {
+  const chips = new Map<string, CategoryChip>();
   for (const { category } of items) {
-    counts.set(category.id, (counts.get(category.id) ?? 0) + 1);
+    const chip = chips.get(category.id) ?? { id: category.id, name: category.name, count: 0 };
+    chip.count += 1;
+    chips.set(category.id, chip);
   }
-  return counts;
+  return [...chips.values()].sort((a, b) => collator.compare(a.name, b.name));
 }
 
 export function filterIngredients(

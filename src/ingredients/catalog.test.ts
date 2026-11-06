@@ -46,8 +46,12 @@ describe("filtering", () => {
 
     expect(availableIngredients(withArchived, false)).toHaveLength(3);
     expect(availableIngredients(withArchived, true)).toHaveLength(4);
-    expect(countByCategory(availableIngredients(withArchived, false)).get("flours")).toBe(2);
-    expect(countByCategory(availableIngredients(withArchived, true)).get("flours")).toBe(3);
+    
+    const chips = (items: Ingredient[]) =>
+    categoryChips(items).map(({ name, count }) => [name, count]);
+
+    expect(chips(availableIngredients(withArchived, false))).toEqual([["Farinhas", 2], ["Laticínios", 1]]);
+    expect(chips(availableIngredients(withArchived, true))).toEqual([["Farinhas", 3], ["Laticínios", 1]]);
   });
 });
 
