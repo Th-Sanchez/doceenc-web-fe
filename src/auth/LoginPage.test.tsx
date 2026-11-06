@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest";
 import { API, mockSession, problem, USER_EMAIL } from "@/test/api";
 import { renderApp } from "@/test/render";
 import { server } from "@/test/server";
+import {mockViewport } from "@/test/viewport";
 
 async function fillAndSubmit(email: string, password: string) {
   const user = userEvent.setup();
@@ -42,6 +43,7 @@ describe("LoginPage", () => {
   });
 
   it("logs in, sends the required header and shows the app", async () => {
+    mockViewport(true);
     let loggedIn = false;
     let requiredHeader: string | null = null;
     server.use(
