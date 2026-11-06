@@ -1,5 +1,5 @@
-import { Home, LogOut, Package } from "lucide-react";
-import { NavLink, Outlet, useNavigate } from "react-router";
+import { ArrowLeft, BookOpen, Home, LogOut, Package, Tag } from "lucide-react";
+import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router";
 import logoIcon from "@/assets/login-logo.svg";
 import { useLogout, useSession } from "@/auth/session";
 import { Button } from "@/components/ui/button";
@@ -12,7 +12,20 @@ const navItems = [
   { to: "/", label: messages.nav.home, end: true, icon: Home },
   { to: "/ingredients", label: messages.nav.ingredients, end: false, icon: Package },
 ];
-const comingSoon = [messages.nav.orders, messages.nav.customers, messages.nav.reports];
+const plannedItems = [
+  { label: messages.nav.recipes, icon: BookOpen },
+  { label: messages.nav.products, icon: Tag },
+];
+const comingSoon = [
+  { label: messages.nav.orders },
+  { label: messages.nav.customers },
+  { label: messages.nav.reports },
+];
+const mobileItems = [
+  ...navItems,
+  { label: messages.nav.recipes, icon: BookOpen },
+  { label: messages.nav.productsShort, icon: Tag },
+];
 
 function Brand() {
   return (
@@ -34,9 +47,16 @@ export function AppLayout() {
   const session = useSession();
   const logout = useLogout();
   const navigate = useNavigate();
+  const location = useLocation();
   // One layout at a time. Rendering both and hiding one with CSS would duplicate landmarks and
   // controls for assistive technology (and in tests, where no stylesheet is applied).
   const isDesktop = useMediaQuery("(min-width: 1024px)");
+  const isFormRoute = location.pathname !== "/ingredients" && location.pathname.startsWith("/ingredients/");
+  const formTitle = location.pathname.endsWith("/new")
+    ? messages.ingredientForm.newTitle
+    : location.pathname.endsWith("/edit")
+      ? messages.ingredientForm.editTitle
+      : messages.priceForm.title;
 
   const onLogout = () => {
     logout.mutate(undefined, { onSettled: () => navigate("/login", { replace: true }) });
@@ -49,7 +69,7 @@ export function AppLayout() {
   );
 
   return (
-    <div className={cn("min-h-screen bg-[#fbf9f6]", isDesktop && "grid grid-cols-[16rem_minmax(0,1fr)]")}>
+    <div className={cn("min-h-screen bg-[#fbf9f6]", isDesktop && "grid grid-cols-[14.5rem_minmax(0,1fr)]")}>
       {isDesktop && (
         <aside className="sticky top-0 flex h-screen flex-col gap-6 border-r bg-card p-4">
           <div className="px-2 pt-2">
@@ -75,10 +95,16 @@ export function AppLayout() {
                 {label}
               </NavLink>
             ))}
+            {plannedItems.map(({ label, icon: Icon }) => (
+              <span key={label} aria-disabled="true" className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-muted-foreground">
+                <Icon aria-hidden className="size-4" />
+                {label}
+              </span>
+            ))}
           </nav>
           <div className="flex flex-col gap-1">
             <p className="px-3 pb-1 text-[11px] font-bold tracking-wider text-muted-foreground">{messages.nav.soon}</p>
-            {comingSoon.map((label) => (
+            {comingSoon.map(({ label }) => (
               <span
                 key={label}
                 aria-disabled="true"
@@ -90,45 +116,100 @@ export function AppLayout() {
             ))}
           </div>
           <div className="mt-auto flex items-center justify-between gap-2 rounded-xl bg-muted p-3">
-            <span className="truncate text-sm">{session.data?.email}</span>
+            <span aria-hidden className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
+              {session.data?.email?.slice(0, 1).toUpperCase()}
+            </span>
             {logoutButton}
           </div>
         </aside>
       )}
 
       <div className="flex min-w-0 flex-col">
-        {!isDesktop && (
-          <header className="sticky top-0 z-10 flex items-center justify-between border-b bg-card px-4 py-3">
-            <Brand />
-            {logoutButton}
+        <header className="sticky top-0 z-10 flex h-14 items-center justify-between border-b bg-card px-4 lg:px-6">
+          {isDesktop ? (
+            <>
+              <div className="flex items-center gap-2 text-sm">
+                <span className="font-semibold text-primary">{messages.login.brand}</span>
+                <span aria-hidden className="text-muted-foreground">/</span>
+                <span className="text-muted-foreground">
+                  {location.pathname === "/" ? messages.nav.home : messages.nav.ingredientManagement}
+                </span>
+              </div>
+              <span className="flex items-center gap-2 text-sm">
+                <span aria-hidden className="flex size-8 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
+                  {session.data?.email?.slice(0, 1).toUpperCase()}
+                </span>
+                {session.data?.email}
+              </span>
+            </>
+          ) : isFormRoute ? (
+            <div className="flex w-full items-center justify-between">
+              <Link to="/ingredients" aria-label={messages.ingredientForm.back} className="flex size-9 items-center justify-center">
+                <ArrowLeft aria-hidden className="size-5" />
+              </Link>
+              <span className="flex flex-1 items-center justify-center gap-2">
+                <span className="flex size-7 items-center justify-center rounded-lg bg-[#f9d8d2]">
+                  <img src={logoIcon} alt="" className="size-4" />
+                </span>
+                <h1 className="font-display text-lg font-semibold">{formTitle}</h1>
+              </span>
+              <span aria-hidden className="flex size-9 items-center justify-center rounded-full bg-[#f9d8d2] text-xs font-semibold text-primary">
+                {session.data?.email?.slice(0, 1).toUpperCase()}
+              </span>
+            </div>
+          ) : (
+            <>
+              <Brand />
+              <span aria-hidden className="flex size-9 items-center justify-center rounded-full bg-[#f9d8d2] text-xs font-semibold text-primary">
+                {session.data?.email?.slice(0, 1).toUpperCase()}
+              </span>
+            </>
+          )}
           </header>
-        )}
-        <main className={cn("mx-auto w-full max-w-6xl p-4", isDesktop ? "p-8" : "pb-24")}>
+        <main
+          className={cn(
+            "mx-auto w-full max-w-[1280px] px-4",
+            isDesktop ? "py-6 lg:px-6" : "pb-28 pt-3",
+            !isDesktop && isFormRoute && "pb-6",
+          )}
+        >
           <Outlet />
         </main>
       </div>
 
-      {!isDesktop && (
+      {!isDesktop && !isFormRoute && (
         <nav
           aria-label={messages.nav.main}
           className="fixed inset-x-0 bottom-0 z-10 flex justify-around border-t bg-card px-2 py-2"
         >
-          {navItems.map(({ to, label, end, icon: Icon }) => (
-            <NavLink
-              key={to}
-              to={to}
-              end={end}
-              className={({ isActive }) =>
-                cn(
-                  "flex min-w-20 flex-col items-center gap-1 rounded-xl px-3 py-1.5 text-xs font-medium text-muted-foreground",
-                  isActive && "bg-[#f9d8d2] text-primary",
-                )
-              }
-            >
-              <Icon aria-hidden className="size-5" />
-              {label}
-            </NavLink>
-          ))}
+          {mobileItems.map((item) => {
+            if (!("to" in item)) {
+              const Icon = item.icon;
+              return (
+                <span key={item.label} aria-disabled="true" className="flex min-w-14 flex-col items-center gap-1 px-2 py-1.5 text-[10px] text-muted-foreground">
+                  <Icon aria-hidden className="size-5" />
+                  {item.label}
+                </span>
+              );
+            }
+            const Icon = item.icon;
+            return (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                end={item.end}
+                className={({ isActive }) =>
+                  cn(
+                    "flex min-w-14 flex-col items-center gap-1 rounded-xl px-2 py-1.5 text-[10px] font-medium text-muted-foreground",
+                    isActive && "bg-[#f9d8d2] text-primary",
+                  )
+                }
+              >
+                <Icon aria-hidden className="size-5" />
+                {item.label}
+              </NavLink>
+            );
+          })}
         </nav>
       )}
     </div>

@@ -33,14 +33,14 @@ export function PriceFields({ unit, register, errors, quantityText, onQuickFill 
     <>
       <Field id="packagePrice" label={t.packagePrice} hint={messages.form.required} error={errors.packagePrice}>
         <div className="relative">
-          <span aria-hidden className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
+          <span aria-hidden className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm font-semibold text-primary">
             R$
           </span>
           <Input
             inputMode="decimal"
             autoComplete="off"
             placeholder="0,00"
-            className="pl-10"
+            className="h-[50px] rounded-xl border-0 bg-[#f5f3f0] pl-10 text-sm"
             {...fieldProps("packagePrice", errors.packagePrice)}
             {...register("packagePrice")}
           />
@@ -52,7 +52,7 @@ export function PriceFields({ unit, register, errors, quantityText, onQuickFill 
           <Input
             inputMode="decimal"
             autoComplete="off"
-            className="pr-12"
+            className="h-[50px] rounded-xl border-0 bg-[#f5f3f0] pr-12 text-sm"
             {...fieldProps("packageQuantity", errors.packageQuantity)}
             {...register("packageQuantity")}
           />
@@ -66,14 +66,14 @@ export function PriceFields({ unit, register, errors, quantityText, onQuickFill 
             {t.quantityRead(formatQuantity(quantity, unit))}
           </p>
         )}
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs text-muted-foreground">{t.quickFill}</span>
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span className="whitespace-nowrap text-[10px] text-muted-foreground">{t.quickFill}</span>
           {QUICK_FILLS[unit].map((value) => (
             <button
               key={value}
               type="button"
               onClick={() => onQuickFill(toInputText(value))}
-              className="rounded-md bg-muted px-2 py-1 text-xs font-medium hover:bg-muted/70"
+              className="whitespace-nowrap rounded-md bg-[#efeeeb] px-1.5 py-1 text-[10px] font-medium hover:bg-muted"
             >
               {formatQuantity(value, unit)}
             </button>
@@ -85,6 +85,7 @@ export function PriceFields({ unit, register, errors, quantityText, onQuickFill 
         <Input
           type="date"
           max={toIsoDate(new Date())}
+          className="h-[50px] rounded-xl border-0 bg-[#f5f3f0] text-sm"
           {...fieldProps("purchasedOn", errors.purchasedOn)}
           {...register("purchasedOn")}
         />

@@ -52,7 +52,7 @@ function ListSkeleton() {
 export function IngredientsPage() {
   const ingredients = useIngredients();
   const restore = useRestoreIngredient();
-  const isDesktop = useMediaQuery("(min-width: 768px)");
+  const isDesktop = useMediaQuery("(min-width: 1024px)");
 
   const [categoriesOpen, setCategoriesOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -89,7 +89,7 @@ export function IngredientsPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <header className="flex flex-wrap items-center justify-between gap-3">
+      <header className="hidden flex-wrap items-center justify-between gap-3 lg:flex">
         <div className="flex items-center gap-3">
           <h1 className="font-display text-3xl font-bold text-primary">{t.title}</h1>
           {all && (
@@ -128,9 +128,9 @@ export function IngredientsPage() {
 
       {all && all.length > 0 && (
         <>
-          <div className="flex flex-col gap-4 rounded-xl border bg-card p-4">
-            <div className="flex flex-wrap items-center gap-3">
-              <div className="relative min-w-52 flex-1">
+          <div className="flex flex-col gap-3 rounded-xl border bg-card p-3 shadow-sm sm:p-4">
+            <div className="flex flex-col gap-3 md:flex-row md:items-center">
+              <div className="relative min-w-0 flex-1">
                 <Search
                   aria-hidden
                   className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
@@ -144,23 +144,31 @@ export function IngredientsPage() {
                   className="pl-9"
                 />
               </div>
-              <div className="flex items-center gap-2">
-                <Switch id="show-archived" checked={showArchived} onCheckedChange={onShowArchived} />
-                <Label htmlFor="show-archived">{t.showArchived}</Label>
+              <div className="flex items-center justify-between gap-3 md:justify-start">
+                <div className="flex items-center gap-2">
+                  <Switch id="show-archived" checked={showArchived} onCheckedChange={onShowArchived} />
+                  <Label htmlFor="show-archived">{t.showArchived}</Label>
+                </div>
               </div>
-              <Select
-                aria-label={t.sortLabel}
-                value={sort}
-                onChange={(event) => onSort(event.target.value as SortKey)}
-                className="md:w-56"
-              >
-                <option value="name">{t.sort.name}</option>
-                <option value="variation">{t.sort.variation}</option>
-                <option value="recent">{t.sort.recent}</option>
-              </Select>
+              <div className="hidden items-center gap-2 md:flex">
+                <Label htmlFor="ingredient-sort" className="whitespace-nowrap text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+                  {t.sortLabel}
+                </Label>
+                <Select
+                  id="ingredient-sort"
+                  aria-label={t.sortLabel}
+                  value={sort}
+                  onChange={(event) => onSort(event.target.value as SortKey)}
+                  className="md:w-56"
+                >
+                  <option value="name">{t.sort.name}</option>
+                  <option value="variation">{t.sort.variation}</option>
+                  <option value="recent">{t.sort.recent}</option>
+                </Select>
+              </div>
             </div>
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <div role="group" aria-label={t.categoryFilter} className="flex flex-wrap gap-2">
+            <div className="flex items-center justify-between gap-2 border-t pt-3">
+              <div role="group" aria-label={t.categoryFilter} className="flex min-w-0 gap-2 overflow-x-auto pb-1 md:flex-wrap">
                 <Chip selected={activeCategory === null} onClick={() => onCategory(null)}>
                   {`${t.allCategories} (${available.length})`}
                 </Chip>
@@ -170,11 +178,27 @@ export function IngredientsPage() {
                   </Chip>
                 ))}
               </div>
-              <Button variant="outline" size="sm" onClick={() => setCategoriesOpen(true)}>
+              <Button variant="outline" size="sm" className="inline-flex shrink-0" onClick={() => setCategoriesOpen(true)}>
                 <Tag aria-hidden className="size-4" />
                 {t.categories}
               </Button>
             </div>
+          </div>
+          <div className="flex items-center justify-between gap-3 md:hidden">
+            <Label htmlFor="ingredient-sort-mobile" className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+              {t.sortLabel}
+            </Label>
+            <Select
+              id="ingredient-sort-mobile"
+              aria-label={t.sortLabel}
+              value={sort}
+              onChange={(event) => onSort(event.target.value as SortKey)}
+              className="w-56"
+            >
+              <option value="name">{t.sort.name}</option>
+              <option value="variation">{t.sort.variation}</option>
+              <option value="recent">{t.sort.recent}</option>
+            </Select>
           </div>
 
           {restore.isError && (
@@ -202,6 +226,10 @@ export function IngredientsPage() {
 
       <ArchiveDialog ingredient={toArchive} onClose={() => setToArchive(null)} />
       <CategoriesDialog open={categoriesOpen} onOpenChange={setCategoriesOpen} />
+      <Link to="/ingredients/new" className={cn(buttonVariants(), "fixed bottom-[76px] right-4 z-20 shadow-lg lg:hidden")}>
+        <Plus aria-hidden className="size-4" />
+        {t.new}
+      </Link>
     </div>
   );
 }
