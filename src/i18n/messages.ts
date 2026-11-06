@@ -60,6 +60,9 @@ export const messages = {
     emailInvalid: "Informe um e-mail válido.",
     passwordRequired: "Informe sua senha.",
   },
+  units: { GRAM: "g", MILLILITER: "ml", UNIT: "un" },
+  months: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
+  dates: { today: "Hoje", yesterday: "Ontem" },
 } as const;
 
 /** Maps the stable "code" returned by the API to a user-facing message. */
@@ -69,6 +72,18 @@ const errorMessages: Record<string, string> = {
   ACCESS_DENIED: "Você não tem permissão para fazer isso.",
   MISSING_CSRF_HEADER: "Requisição recusada. Recarregue a página e tente novamente.",
   INTERNAL_ERROR: "Algo deu errado do nosso lado. Tente novamente em instantes.",
+  VALIDATION_FAILED: "Revise os campos destacados.",
+  MALFORMED_REQUEST: "Não foi possível entender os dados enviados. Recarregue a página e tente novamente.",
+  INGREDIENT_NOT_FOUND: "Insumo não encontrado.",
+  INGREDIENT_ALREADY_EXISTS: "Já existe um insumo com este nome e marca.",
+  ARCHIVED_INGREDIENT_EXISTS: "Já existe um insumo arquivado com este nome e marca. Restaure-o em vez de criar outro.",
+  CATEGORY_NOT_FOUND: "Categoria não encontrada.",
+  CATEGORY_NAME_ALREADY_EXISTS: "Já existe uma categoria com este nome.",
+  CATEGORY_IN_USE: "Esta categoria está em uso e não pode ser excluída.",
+  CATEGORY_TYPE_MISMATCH: "Esta categoria não pode ser usada em insumos.",
+  INCOMPATIBLE_UNIT: "A unidade informada não combina com a unidade do insumo.",
+  PURCHASE_DATE_IN_FUTURE: "A data da compra não pode ser no futuro.",
+  PRICE_OUT_OF_RANGE: "O preço é muito baixo para essa quantidade.",
 };
 
 const fallbackErrorMessage = "Algo deu errado. Tente novamente.";
@@ -96,4 +111,16 @@ export function messageForError(error: unknown): string {
     return networkErrorMessage;
   }
   return fallbackErrorMessage;
+}
+
+const fieldErrorMessages: Record<string, string> = {
+  NotBlank: "Campo obrigatório.",
+  NotNull: "Campo obrigatório.",
+  Size: "Texto longo demais.",
+  DecimalMin: "O valor mínimo é 0,01.",
+  Digits: "Valor grande demais ou com casas decimais demais.",
+};
+
+export function messageForFieldError(code: string): string {
+  return fieldErrorMessages[code] ?? "Valor inválido.";
 }
