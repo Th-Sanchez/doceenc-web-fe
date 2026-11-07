@@ -19,6 +19,7 @@ export const messages = {
     orders: "Pedidos",
     customers: "Clientes",
     reports: "Relatórios",
+    userMenu: "Menu do usuário",
   },
   ingredients: {
     title: "Insumos",

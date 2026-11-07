@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { messages } from "@/i18n/messages";
 import { useMediaQuery } from "@/lib/use-media-query";
 import { cn } from "@/lib/utils";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 /** Each slice adds its entries here (recipes, products, settings...). */
 const navItems = [
@@ -43,6 +44,40 @@ function Brand() {
   );
 }
 
+function UserMenu({ email, onLogout, pending }: { email: string | undefined; onLogout: () => void; pending: boolean }) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button
+          type="button"
+          aria-label={messages.nav.userMenu}
+          className="flex size-9 items-center justify-center rounded-full bg-[#f9d8d2] text-xs font-semibold text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          {email?.slice(0, 1).toUpperCase()}
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <p className="px-3 py-2 text-xs text-muted-foreground">{email}</p>
+        <DropdownMenuItem disabled={pending} onSelect={onLogout}>
+          {messages.nav.logout}
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+function EmailText({ email }: { email: string }) {
+  const at = email.indexOf("@");
+  if (at < 0) return <>{email}</>;
+  return (
+    <>
+      {email.slice(0, at)}
+      <wbr />
+      {email.slice(at)}
+    </>
+  );
+}
+
 export function AppLayout() {
   const session = useSession();
   const logout = useLogout();
@@ -63,13 +98,14 @@ export function AppLayout() {
   };
 
   const logoutButton = (
-    <Button variant="ghost" size="sm" onClick={onLogout} disabled={logout.isPending} aria-label={messages.nav.logout}>
+    <Button variant="outline" size="sm" onClick={onLogout} disabled={logout.isPending} className="w-full">
       <LogOut aria-hidden className="size-4" />
+      {messages.nav.logout}
     </Button>
   );
 
   return (
-    <div className={cn("min-h-screen bg-[#fbf9f6]", isDesktop && "grid grid-cols-[14.5rem_minmax(0,1fr)]")}>
+    <div className={cn("min-h-screen bg-[#fbf9f6]", isDesktop && "grid grid-cols-[16rem_minmax(0,1fr)]")}>
       {isDesktop && (
         <aside className="sticky top-0 flex h-screen flex-col gap-6 border-r bg-card p-4">
           <div className="px-2 pt-2">
@@ -115,10 +151,15 @@ export function AppLayout() {
               </span>
             ))}
           </div>
-          <div className="mt-auto flex items-center justify-between gap-2 rounded-xl bg-muted p-3">
-            <span aria-hidden className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
-              {session.data?.email?.slice(0, 1).toUpperCase()}
-            </span>
+          <div className="mt-auto flex flex-col gap-3 rounded-xl bg-muted p-3">
+            <div className="flex items-center gap-2">
+              <span aria-hidden className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
+                {session.data?.email?.slice(0, 1).toUpperCase()}
+              </span>
+              <span title={session.data?.email} className="min-w-0 flex-1 text-sm leading-snug [overflow-wrap:anywhere]">
+                <EmailText email={session.data?.email ?? ""} />
+              </span>
+            </div>
             {logoutButton}
           </div>
         </aside>
@@ -135,12 +176,12 @@ export function AppLayout() {
                   {location.pathname === "/" ? messages.nav.home : messages.nav.ingredientManagement}
                 </span>
               </div>
-              <span className="flex items-center gap-2 text-sm">
+              {/* <span className="flex items-center gap-2 text-sm">
                 <span aria-hidden className="flex size-8 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
                   {session.data?.email?.slice(0, 1).toUpperCase()}
                 </span>
                 {session.data?.email}
-              </span>
+              </span> */}
             </>
           ) : isFormRoute ? (
             <div className="flex w-full items-center justify-between">
@@ -153,16 +194,12 @@ export function AppLayout() {
                 </span>
                 <h1 className="font-display text-lg font-semibold">{formTitle}</h1>
               </span>
-              <span aria-hidden className="flex size-9 items-center justify-center rounded-full bg-[#f9d8d2] text-xs font-semibold text-primary">
-                {session.data?.email?.slice(0, 1).toUpperCase()}
-              </span>
+              <UserMenu email={session.data?.email} onLogout={onLogout} pending={logout.isPending} />
             </div>
           ) : (
             <>
               <Brand />
-              <span aria-hidden className="flex size-9 items-center justify-center rounded-full bg-[#f9d8d2] text-xs font-semibold text-primary">
-                {session.data?.email?.slice(0, 1).toUpperCase()}
-              </span>
+              <UserMenu email={session.data?.email} onLogout={onLogout} pending={logout.isPending} />
             </>
           )}
           </header>

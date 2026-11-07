@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest";
 import { API, mockSession, problem, USER_EMAIL } from "@/test/api";
 import { renderApp } from "@/test/render";
 import { server } from "@/test/server";
+import { mockViewport } from "@/test/viewport";
 
 describe("route protection", () => {
   it("redirects to the login page when nobody is logged in", async () => {
@@ -35,6 +36,7 @@ describe("route protection", () => {
   });
 
   it("logs out and goes back to the login page", async () => {
+    mockViewport(true);
     let requiredHeader: string | null = null;
     mockSession(USER_EMAIL);
     server.use(
@@ -53,11 +55,29 @@ describe("route protection", () => {
   });
 
   it("sends the user to the login page when a request finds the session expired", async () => {
+    mockViewport(true);
     mockSession(USER_EMAIL);
     server.use(http.post(`${API}/api/v1/auth/logout`, () => problem(401, "UNAUTHENTICATED")));
     renderApp("/");
 
     await userEvent.setup().click(await screen.findByRole("button", { name: "Sair" }));
+
+    expect(await screen.findByRole("heading", { name: "Entrar na sua conta" })).toBeInTheDocument();
+  });
+
+  it("logs out from the user menu on mobile", async () => {
+    mockSession(USER_EMAIL);
+    server.use(
+      http.post(`${API}/api/v1/auth/logout`, () => {
+        mockSession(null);
+        return new HttpResponse(null, { status: 204 });
+      }),
+    );
+    renderApp("/");
+    const user = userEvent.setup();
+
+    await user.click(await screen.findByRole("button", { name: "Menu do usuário" }));
+    await user.click(await screen.findByRole("menuitem", { name: "Sair" }));
 
     expect(await screen.findByRole("heading", { name: "Entrar na sua conta" })).toBeInTheDocument();
   });
