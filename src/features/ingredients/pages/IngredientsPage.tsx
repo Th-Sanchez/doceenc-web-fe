@@ -11,14 +11,14 @@ import { Switch } from "@/components/ui/switch";
 import { messageForError, messages } from "@/i18n/messages";
 import { useMediaQuery } from "@/lib/use-media-query";
 import { cn } from "@/lib/utils";
-import { ArchiveDialog } from "./ArchiveDialog";
+import { ArchiveDialog } from "../components/ArchiveDialog";
 import {
   availableIngredients, categoryChips, filterIngredients, paginate, sortIngredients, type SortKey,
-} from "./catalog";
-import { IngredientCards, IngredientTable } from "./IngredientList";
-import { Pagination } from "./Pagination";
-import { useIngredients, useRestoreIngredient } from "./queries";
-import { CategoriesDialog } from "@/categories/CategoriesDialog";
+} from "../catalog";
+import { IngredientCards, IngredientTable } from "../components/IngredientList";
+import { Pagination } from "../../../components/Pagination";
+import { useIngredients, useRestoreIngredient } from "../queries";
+import { CategoriesDialog } from "@/features/categories/CategoriesDialog";
 
 const PAGE_SIZE = 6;
 const t = messages.ingredients;

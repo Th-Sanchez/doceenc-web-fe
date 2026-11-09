@@ -4,8 +4,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 import type { Ingredient } from "@/api/types";
-import { CategoriesDialog } from "@/categories/CategoriesDialog";
-import { useIngredientCategories } from "@/categories/queries";
+import { CategoriesDialog } from "@/features/categories/CategoriesDialog";
+import { useIngredientCategories } from "@/features/categories/queries";
 import { Button } from "@/components/ui/button";
 import { buttonVariants } from "@/components/ui/button-variants";
 import { Field } from "@/components/ui/field";
@@ -15,11 +15,11 @@ import { Select } from "@/components/ui/select";
 import { messageForError, messages } from "@/i18n/messages";
 import { applyServerError, type ServerErrorMapping } from "@/lib/form-errors";
 import { formatMoney, formatQuantity, formatUnitCost } from "@/lib/format";
-import { ArchiveDialog } from "./ArchiveDialog";
-import { IngredientGate } from "./IngredientGate";
-import { toUpdateBody } from "./payloads";
-import { useRestoreIngredient, useUpdateIngredient } from "./queries";
-import { type EditFormInput, type EditFormValues, editSchema } from "./schemas";
+import { ArchiveDialog } from "../components/ArchiveDialog";
+import { IngredientGate } from "../components/IngredientGate";
+import { toUpdateBody } from "../payloads";
+import { useRestoreIngredient, useUpdateIngredient } from "../queries";
+import { type EditFormInput, type EditFormValues, editSchema } from "../schemas";
 
 const SERVER_ERRORS = {
   fields: { name: "name", brandSupplier: "brandSupplier", categoryId: "categoryId" },

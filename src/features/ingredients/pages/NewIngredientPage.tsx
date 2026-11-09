@@ -5,8 +5,8 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
 import { ApiError } from "@/api/problem";
 import type { Ingredient } from "@/api/types";
-import { CategoriesDialog } from "@/categories/CategoriesDialog";
-import { useIngredientCategories } from "@/categories/queries";
+import { CategoriesDialog } from "@/features/categories/CategoriesDialog";
+import { useIngredientCategories } from "@/features/categories/queries";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
 import { fieldProps } from "@/components/ui/field-props";
@@ -16,12 +16,12 @@ import { messages } from "@/i18n/messages";
 import { applyServerError, type ServerErrorMapping } from "@/lib/form-errors";
 import { toIsoDate } from "@/lib/format";
 import { cn } from "@/lib/utils";
-import { findArchivedTwin } from "./catalog";
-import { toCreateBody } from "./payloads";
-import { PriceFields } from "./PriceFields";
-import { useCreateIngredient, useIngredients, useRestoreIngredient } from "./queries";
-import { type CreateFormInput, type CreateFormValues, createSchema } from "./schemas";
-import { BASE_UNITS } from "./units";
+import { findArchivedTwin } from "../catalog";
+import { toCreateBody } from "../payloads";
+import { PriceFields } from "../components/PriceFields";
+import { useCreateIngredient, useIngredients, useRestoreIngredient } from "../queries";
+import { type CreateFormInput, type CreateFormValues, createSchema } from "../schemas";
+import { BASE_UNITS } from "../units";
 
 const SERVER_ERRORS = {
   fields: {

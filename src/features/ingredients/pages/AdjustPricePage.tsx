@@ -10,13 +10,13 @@ import { messages } from "@/i18n/messages";
 import { toInputText } from "@/lib/decimal";
 import { applyServerError, type ServerErrorMapping } from "@/lib/form-errors";
 import { formatDate, formatLastPurchase, formatMoney, formatQuantity, formatUnitCost, toIsoDate } from "@/lib/format";
-import { IngredientGate } from "./IngredientGate";
-import { toPriceBody } from "./payloads";
-import { PriceChart } from "./PriceChart";
-import { PriceFields } from "./PriceFields";
-import { useIngredientPrices, useRegisterPurchase } from "./queries";
-import { type PriceFormInput, type PriceFormValues, priceSchema } from "./schemas";
-import { VariationBadge } from "./VariationBadge";
+import { IngredientGate } from "../components/IngredientGate";
+import { toPriceBody } from "../payloads";
+import { PriceChart } from "../components/PriceChart";
+import { PriceFields } from "../components/PriceFields";
+import { useIngredientPrices, useRegisterPurchase } from "../queries";
+import { type PriceFormInput, type PriceFormValues, priceSchema } from "../schemas";
+import { VariationBadge } from "../components/VariationBadge";
 
 const SERVER_ERRORS = {
   fields: {

@@ -2,7 +2,7 @@ import type { Ingredient } from "@/api/types";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogTitle } from "@/components/ui/dialog";
 import { messageForError, messages } from "@/i18n/messages";
-import { useArchiveIngredient } from "./queries";
+import { useArchiveIngredient } from "../queries";
 
 export function ArchiveDialog({ ingredient, onClose }: { ingredient: Ingredient | null; onClose: () => void }) {
   const archive = useArchiveIngredient();

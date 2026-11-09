@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/api/client";
 import { unwrap } from "@/api/unwrap";
-import { ingredientKeys } from "@/ingredients/queries";
+import { ingredientKeys } from "@/features/ingredients/queries";
 
 export const categoryKeys = {
   all: ["categories"] as const,

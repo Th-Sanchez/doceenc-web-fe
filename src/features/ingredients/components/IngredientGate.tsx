@@ -4,7 +4,7 @@ import type { Ingredient } from "@/api/types";
 import { Button } from "@/components/ui/button";
 import { buttonVariants } from "@/components/ui/button-variants";
 import { messages } from "@/i18n/messages";
-import { useIngredient } from "./queries";
+import { useIngredient } from "../queries";
 
 export function IngredientGate({ children }: { children: (ingredient: Ingredient) => ReactNode }) {
   const { id } = useParams();

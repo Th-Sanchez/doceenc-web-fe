@@ -4,10 +4,10 @@ import { RequireAuth } from "@/auth/RequireAuth";
 import { AppLayout } from "@/layout/AppLayout";
 import { HomePage } from "@/pages/HomePage";
 import { NotFoundPage } from "@/pages/NotFoundPage";
-import { AdjustPricePage } from "@/ingredients/AdjustPricePage";
-import { EditIngredientPage } from "@/ingredients/EditIngredientPage";
-import { IngredientsPage } from "@/ingredients/IngredientsPage";
-import { NewIngredientPage } from "@/ingredients/NewIngredientPage";
+import { AdjustPricePage } from "@/features/ingredients/pages/AdjustPricePage";
+import { EditIngredientPage } from "@/features/ingredients/pages/EditIngredientPage";
+import { IngredientsPage } from "@/features/ingredients/pages/IngredientsPage";
+import { NewIngredientPage } from "@/features/ingredients/pages/NewIngredientPage";
 
 export function AppRoutes() {
   return (
