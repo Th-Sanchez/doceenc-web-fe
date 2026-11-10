@@ -17,12 +17,82 @@
     }
   ],
   "paths": {
+    "/api/v1/recipes/{id}": {
+      "get": {
+        "tags": [
+          "recipe-controller"
+        ],
+        "operationId": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecipeDetailResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "recipe-controller"
+        ],
+        "operationId": "update",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRecipeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecipeDetailResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/ingredients/{id}": {
       "put": {
         "tags": [
           "ingredient-controller"
         ],
-        "operationId": "update",
+        "operationId": "update_1",
         "parameters": [
           {
             "name": "id",
@@ -63,7 +133,7 @@
         "tags": [
           "category-controller"
         ],
-        "operationId": "update_1",
+        "operationId": "update_2",
         "parameters": [
           {
             "name": "id",
@@ -121,12 +191,155 @@
         }
       }
     },
+    "/api/v1/recipes": {
+      "get": {
+        "tags": [
+          "recipe-controller"
+        ],
+        "operationId": "list",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RecipeSummaryResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "recipe-controller"
+        ],
+        "operationId": "create",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRecipeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecipeDetailResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/recipes/{id}/restore": {
+      "post": {
+        "tags": [
+          "recipe-controller"
+        ],
+        "operationId": "restore",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecipeDetailResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/recipes/{id}/archive": {
+      "post": {
+        "tags": [
+          "recipe-controller"
+        ],
+        "operationId": "archive",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecipeDetailResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/recipes/simulation": {
+      "post": {
+        "tags": [
+          "recipe-controller"
+        ],
+        "operationId": "simulate",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimulateRecipeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecipeSimulationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/ingredients": {
       "get": {
         "tags": [
           "ingredient-controller"
         ],
-        "operationId": "list",
+        "operationId": "list_1",
         "parameters": [
           {
             "name": "categoryId",
@@ -174,7 +387,7 @@
         "tags": [
           "ingredient-controller"
         ],
-        "operationId": "create",
+        "operationId": "create_1",
         "requestBody": {
           "content": {
             "application/json": {
@@ -204,7 +417,7 @@
         "tags": [
           "ingredient-controller"
         ],
-        "operationId": "restore",
+        "operationId": "restore_1",
         "parameters": [
           {
             "name": "id",
@@ -308,7 +521,7 @@
         "tags": [
           "ingredient-controller"
         ],
-        "operationId": "archive",
+        "operationId": "archive_1",
         "parameters": [
           {
             "name": "id",
@@ -339,7 +552,7 @@
         "tags": [
           "category-controller"
         ],
-        "operationId": "list_1",
+        "operationId": "list_2",
         "parameters": [
           {
             "name": "type",
@@ -374,7 +587,7 @@
         "tags": [
           "category-controller"
         ],
-        "operationId": "create_1",
+        "operationId": "create_2",
         "requestBody": {
           "content": {
             "application/json": {
@@ -462,6 +675,217 @@
   },
   "components": {
     "schemas": {
+      "RecipeItemRequest": {
+        "type": "object",
+        "properties": {
+          "ingredientId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "quantity": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          }
+        },
+        "required": [
+          "ingredientId",
+          "quantity"
+        ]
+      },
+      "UpdateRecipeRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 0
+          },
+          "categoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "yieldQuantity": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "prepTimeMinutes": {
+            "type": "integer",
+            "format": "int32",
+            "exclusiveMinimum": 0
+          },
+          "shelfLifeDays": {
+            "type": "integer",
+            "format": "int32",
+            "exclusiveMinimum": 0
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RecipeItemRequest"
+            },
+            "minItems": 1
+          }
+        },
+        "required": [
+          "categoryId",
+          "items",
+          "name",
+          "yieldQuantity"
+        ]
+      },
+      "RecipeCategoryResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
+      "RecipeDetailResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "category": {
+            "$ref": "#/components/schemas/RecipeCategoryResponse"
+          },
+          "yieldQuantity": {
+            "type": "number"
+          },
+          "yieldUnit": {
+            "type": "string",
+            "enum": [
+              "GRAM",
+              "MILLILITER",
+              "UNIT"
+            ]
+          },
+          "prepTimeMinutes": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int32"
+          },
+          "shelfLifeDays": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int32"
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RecipeItemResponse"
+            }
+          },
+          "totalCost": {
+            "type": "number"
+          },
+          "costPerYieldUnit": {
+            "type": "number"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "active",
+          "category",
+          "costPerYieldUnit",
+          "createdAt",
+          "id",
+          "items",
+          "name",
+          "prepTimeMinutes",
+          "shelfLifeDays",
+          "totalCost",
+          "updatedAt",
+          "yieldQuantity",
+          "yieldUnit"
+        ]
+      },
+      "RecipeIngredientResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "brandSupplier": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "baseUnit": {
+            "type": "string",
+            "enum": [
+              "GRAM",
+              "MILLILITER",
+              "UNIT"
+            ]
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "unitPrice": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "active",
+          "baseUnit",
+          "brandSupplier",
+          "id",
+          "name",
+          "unitPrice"
+        ]
+      },
+      "RecipeItemResponse": {
+        "type": "object",
+        "properties": {
+          "ingredient": {
+            "$ref": "#/components/schemas/RecipeIngredientResponse"
+          },
+          "quantity": {
+            "type": "number"
+          },
+          "cost": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "cost",
+          "ingredient",
+          "quantity"
+        ]
+      },
       "UpdateIngredientRequest": {
         "type": "object",
         "properties": {
@@ -605,6 +1029,97 @@
           "type"
         ]
       },
+      "CreateRecipeRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 0
+          },
+          "categoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "yieldQuantity": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "yieldUnit": {
+            "type": "string",
+            "enum": [
+              "GRAM",
+              "MILLILITER",
+              "UNIT"
+            ]
+          },
+          "prepTimeMinutes": {
+            "type": "integer",
+            "format": "int32",
+            "exclusiveMinimum": 0
+          },
+          "shelfLifeDays": {
+            "type": "integer",
+            "format": "int32",
+            "exclusiveMinimum": 0
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RecipeItemRequest"
+            },
+            "minItems": 1
+          }
+        },
+        "required": [
+          "categoryId",
+          "items",
+          "name",
+          "yieldQuantity",
+          "yieldUnit"
+        ]
+      },
+      "SimulateRecipeRequest": {
+        "type": "object",
+        "properties": {
+          "yieldQuantity": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RecipeItemRequest"
+            }
+          }
+        },
+        "required": [
+          "items",
+          "yieldQuantity"
+        ]
+      },
+      "RecipeSimulationResponse": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RecipeItemResponse"
+            }
+          },
+          "totalCost": {
+            "type": "number"
+          },
+          "costPerYieldUnit": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "costPerYieldUnit",
+          "items",
+          "totalCost"
+        ]
+      },
       "CreateIngredientRequest": {
         "type": "object",
         "properties": {
@@ -714,6 +1229,87 @@
           "password"
         ]
       },
+      "RecipeSummaryResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "category": {
+            "$ref": "#/components/schemas/RecipeCategoryResponse"
+          },
+          "yieldQuantity": {
+            "type": "number"
+          },
+          "yieldUnit": {
+            "type": "string",
+            "enum": [
+              "GRAM",
+              "MILLILITER",
+              "UNIT"
+            ]
+          },
+          "prepTimeMinutes": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int32"
+          },
+          "shelfLifeDays": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int32"
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "itemCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "archivedIngredientCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalCost": {
+            "type": "number"
+          },
+          "costPerYieldUnit": {
+            "type": "number"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "active",
+          "archivedIngredientCount",
+          "category",
+          "costPerYieldUnit",
+          "createdAt",
+          "id",
+          "itemCount",
+          "name",
+          "prepTimeMinutes",
+          "shelfLifeDays",
+          "totalCost",
+          "updatedAt",
+          "yieldQuantity",
+          "yieldUnit"
+        ]
+      },
       "PriceHistoryResponse": {
         "type": "object",
         "properties": {
@@ -757,6 +1353,62 @@
         },
         "required": [
           "email"
+        ]
+      },
+      "FieldProblem": {
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string",
+            "description": "Field path, e.g. \"price.packagePrice\"."
+          },
+          "code": {
+            "type": "string",
+            "description": "Bean validation constraint, e.g.\"NotBlank\"."
+          }
+        },
+        "required": [
+          "code",
+          "field"
+        ]
+      },
+      "ProblemDetail": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "string"
+          },
+          "instance": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string",
+            "description": "Stable error code; the UI text is chosen from it."
+          },
+          "retryAfterSeconds": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "errors": {
+            "type": "array",
+            "description": "Only for VALIDATION_FAILED.",
+            "items": {
+              "$ref": "#/components/schemas/FieldProblem"
+            }
+          }
+        },
+        "required": [
+          "code",
+          "status"
         ]
       }
     },

@@ -142,6 +142,12 @@ export const messages = {
     dateFuture: "A data da compra não pode ser no futuro.",
     categoryRequired: "Escolha uma categoria.",
     textTooLong: "Use no máximo 120 caracteres.",
+    quantityMin: "O valor mínimo é 0,0001.",
+    integerInvalid: "Use apenas números inteiros.",
+    integerMin: "O valor mínimo é 1.",
+    integerMax: (max: number) => `O valor máximo é ${max.toLocaleString("pt-BR")}.`,
+    itemsRequired: "Adicione ao menos um insumo.",
+    duplicateItem: "Este insumo já está na receita.",
   },
   form: { required: "Obrigatório", optional: "Opcional", cancel: "Cancelar", saving: "Salvando…" },
   units: { GRAM: "g", MILLILITER: "ml", UNIT: "un" },
@@ -227,10 +233,16 @@ const errorMessages: Record<string, string> = {
   CATEGORY_NOT_FOUND: "Categoria não encontrada.",
   CATEGORY_NAME_ALREADY_EXISTS: "Já existe uma categoria com este nome.",
   CATEGORY_IN_USE: "Esta categoria está em uso e não pode ser excluída.",
-  CATEGORY_TYPE_MISMATCH: "Esta categoria não pode ser usada em insumos.",
+  CATEGORY_TYPE_MISMATCH: "Esta categoria não pode ser usada neste cadastro.",
   INCOMPATIBLE_UNIT: "A unidade informada não combina com a unidade do insumo.",
   PURCHASE_DATE_IN_FUTURE: "A data da compra não pode ser no futuro.",
   PRICE_OUT_OF_RANGE: "O preço é muito baixo para essa quantidade.",
+  RECIPE_NOT_FOUND: "Receita não encontrada.",
+  RECIPE_ALREADY_EXISTS: "Já existe uma receita com este nome.",
+  ARCHIVED_RECIPE_EXISTS: "Já existe uma receita arquivada com este nome. Restaure-a em vez de criar outra.",
+  RECIPE_ARCHIVED: "Esta receita está arquivada. Restaure-a para poder editar.",
+  ARCHIVED_INGREDIENT_NOT_ALLOWED: "Um dos insumos está arquivado e não pode ser adicionado à receita.",
+  DUPLICATE_RECIPE_ITEM: "O mesmo insumo aparece mais de uma vez na receita.",
 };
 
 const fallbackErrorMessage = "Algo deu errado. Tente novamente.";
@@ -266,6 +278,8 @@ const fieldErrorMessages: Record<string, string> = {
   Size: "Texto longo demais.",
   DecimalMin: "O valor mínimo é 0,01.",
   Digits: "Valor grande demais ou com casas decimais demais.",
+  Positive: "O valor deve ser maior que zero.",
+  NotEmpty: "Adicione ao menos um insumo.",
 };
 
 export function messageForFieldError(code: string): string {

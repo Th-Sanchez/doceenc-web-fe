@@ -4,6 +4,22 @@
  */
 
 export interface paths {
+    "/api/v1/recipes/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["get"];
+        put: operations["update"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/ingredients/{id}": {
         parameters: {
             query?: never;
@@ -12,7 +28,7 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
-        put: operations["update"];
+        put: operations["update_1"];
         post?: never;
         delete?: never;
         options?: never;
@@ -28,7 +44,7 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
-        put: operations["update_1"];
+        put: operations["update_2"];
         post?: never;
         delete: operations["delete"];
         options?: never;
@@ -36,7 +52,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/ingredients": {
+    "/api/v1/recipes": {
         parameters: {
             query?: never;
             header?: never;
@@ -52,7 +68,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/ingredients/{id}/restore": {
+    "/api/v1/recipes/{id}/restore": {
         parameters: {
             query?: never;
             header?: never;
@@ -62,6 +78,70 @@ export interface paths {
         get?: never;
         put?: never;
         post: operations["restore"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/recipes/{id}/archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["archive"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/recipes/simulation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["simulate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/ingredients": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["list_1"];
+        put?: never;
+        post: operations["create_1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/ingredients/{id}/restore": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["restore_1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -93,7 +173,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        post: operations["archive"];
+        post: operations["archive_1"];
         delete?: never;
         options?: never;
         head?: never;
@@ -107,9 +187,9 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["list_1"];
+        get: operations["list_2"];
         put?: never;
-        post: operations["create_1"];
+        post: operations["create_2"];
         delete?: never;
         options?: never;
         head?: never;
@@ -171,6 +251,63 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        RecipeItemRequest: {
+            /** Format: uuid */
+            ingredientId: string;
+            quantity: number;
+        };
+        UpdateRecipeRequest: {
+            name: string;
+            /** Format: uuid */
+            categoryId: string;
+            yieldQuantity: number;
+            /** Format: int32 */
+            prepTimeMinutes?: number;
+            /** Format: int32 */
+            shelfLifeDays?: number;
+            items: components["schemas"]["RecipeItemRequest"][];
+        };
+        RecipeCategoryResponse: {
+            /** Format: uuid */
+            id: string;
+            name: string;
+        };
+        RecipeDetailResponse: {
+            /** Format: uuid */
+            id: string;
+            name: string;
+            category: components["schemas"]["RecipeCategoryResponse"];
+            yieldQuantity: number;
+            /** @enum {string} */
+            yieldUnit: "GRAM" | "MILLILITER" | "UNIT";
+            /** Format: int32 */
+            prepTimeMinutes: number | null;
+            /** Format: int32 */
+            shelfLifeDays: number | null;
+            active: boolean;
+            items: components["schemas"]["RecipeItemResponse"][];
+            totalCost: number;
+            costPerYieldUnit: number;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        RecipeIngredientResponse: {
+            /** Format: uuid */
+            id: string;
+            name: string;
+            brandSupplier: string | null;
+            /** @enum {string} */
+            baseUnit: "GRAM" | "MILLILITER" | "UNIT";
+            active: boolean;
+            unitPrice: number;
+        };
+        RecipeItemResponse: {
+            ingredient: components["schemas"]["RecipeIngredientResponse"];
+            quantity: number;
+            cost: number;
+        };
         UpdateIngredientRequest: {
             name: string;
             brandSupplier?: string;
@@ -208,6 +345,28 @@ export interface components {
             /** @enum {string} */
             type: "INGREDIENT" | "RECIPE";
         };
+        CreateRecipeRequest: {
+            name: string;
+            /** Format: uuid */
+            categoryId: string;
+            yieldQuantity: number;
+            /** @enum {string} */
+            yieldUnit: "GRAM" | "MILLILITER" | "UNIT";
+            /** Format: int32 */
+            prepTimeMinutes?: number;
+            /** Format: int32 */
+            shelfLifeDays?: number;
+            items: components["schemas"]["RecipeItemRequest"][];
+        };
+        SimulateRecipeRequest: {
+            yieldQuantity: number;
+            items: components["schemas"]["RecipeItemRequest"][];
+        };
+        RecipeSimulationResponse: {
+            items: components["schemas"]["RecipeItemResponse"][];
+            totalCost: number;
+            costPerYieldUnit: number;
+        };
         CreateIngredientRequest: {
             name: string;
             brandSupplier?: string;
@@ -235,6 +394,30 @@ export interface components {
             email: string;
             password: string;
         };
+        RecipeSummaryResponse: {
+            /** Format: uuid */
+            id: string;
+            name: string;
+            category: components["schemas"]["RecipeCategoryResponse"];
+            yieldQuantity: number;
+            /** @enum {string} */
+            yieldUnit: "GRAM" | "MILLILITER" | "UNIT";
+            /** Format: int32 */
+            prepTimeMinutes: number | null;
+            /** Format: int32 */
+            shelfLifeDays: number | null;
+            active: boolean;
+            /** Format: int32 */
+            itemCount: number;
+            /** Format: int32 */
+            archivedIngredientCount: number;
+            totalCost: number;
+            costPerYieldUnit: number;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
         PriceHistoryResponse: {
             /** Format: uuid */
             id: string;
@@ -249,14 +432,24 @@ export interface components {
         MeResponse: {
             email: string;
         };
+        FieldProblem: {
+            /** @description Field path, e.g. "price.packagePrice". */
+            field: string;
+            /** @description Bean validation constraint, e.g."NotBlank". */
+            code: string;
+        };
         ProblemDetail: {
             type?: string;
             title?: string;
-            status?: number;
+            status: string;
             detail?: string;
             instance?: string;
-            code?: string;
+            /** @description Stable error code; the UI text is chosen from it. */
+            code: string;
+            /** Format: int64 */
             retryAfterSeconds?: number;
+            /** @description Only for VALIDATION_FAILED. */
+            errors?: components["schemas"]["FieldProblem"][];
         };
     };
     responses: never;
@@ -267,7 +460,55 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["RecipeDetailResponse"];
+                };
+            };
+        };
+    };
     update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateRecipeRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["RecipeDetailResponse"];
+                };
+            };
+        };
+    };
+    update_1: {
         parameters: {
             query?: never;
             header?: never;
@@ -293,7 +534,7 @@ export interface operations {
             };
         };
     };
-    update_1: {
+    update_2: {
         parameters: {
             query?: never;
             header?: never;
@@ -341,6 +582,118 @@ export interface operations {
     };
     list: {
         parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["RecipeSummaryResponse"][];
+                };
+            };
+        };
+    };
+    create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateRecipeRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["RecipeDetailResponse"];
+                };
+            };
+        };
+    };
+    restore: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["RecipeDetailResponse"];
+                };
+            };
+        };
+    };
+    archive: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["RecipeDetailResponse"];
+                };
+            };
+        };
+    };
+    simulate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SimulateRecipeRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["RecipeSimulationResponse"];
+                };
+            };
+        };
+    };
+    list_1: {
+        parameters: {
             query?: {
                 categoryId?: string;
                 active?: boolean;
@@ -363,7 +716,7 @@ export interface operations {
             };
         };
     };
-    create: {
+    create_1: {
         parameters: {
             query?: never;
             header?: never;
@@ -387,7 +740,7 @@ export interface operations {
             };
         };
     };
-    restore: {
+    restore_1: {
         parameters: {
             query?: never;
             header?: never;
@@ -457,7 +810,7 @@ export interface operations {
             };
         };
     };
-    archive: {
+    archive_1: {
         parameters: {
             query?: never;
             header?: never;
@@ -479,7 +832,7 @@ export interface operations {
             };
         };
     };
-    list_1: {
+    list_2: {
         parameters: {
             query?: {
                 type?: "INGREDIENT" | "RECIPE";
@@ -501,7 +854,7 @@ export interface operations {
             };
         };
     };
-    create_1: {
+    create_2: {
         parameters: {
             query?: never;
             header?: never;
