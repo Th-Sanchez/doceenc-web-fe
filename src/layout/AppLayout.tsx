@@ -7,6 +7,7 @@ import { messages } from "@/i18n/messages";
 import { useMediaQuery } from "@/lib/use-media-query";
 import { cn } from "@/lib/utils";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { routeMetaFor } from "./routeMeta";
 
 /** Each slice adds its entries here (recipes, products, settings...). */
 const navItems = [
@@ -86,12 +87,8 @@ export function AppLayout() {
   // One layout at a time. Rendering both and hiding one with CSS would duplicate landmarks and
   // controls for assistive technology (and in tests, where no stylesheet is applied).
   const isDesktop = useMediaQuery("(min-width: 1024px)");
-  const isFormRoute = location.pathname !== "/ingredients" && location.pathname.startsWith("/ingredients/");
-  const formTitle = location.pathname.endsWith("/new")
-    ? messages.ingredientForm.newTitle
-    : location.pathname.endsWith("/edit")
-      ? messages.ingredientForm.editTitle
-      : messages.priceForm.title;
+  const meta = routeMetaFor(location.pathname);
+  const isFormRoute = meta?.form !== undefined;
 
   const onLogout = () => {
     logout.mutate(undefined, { onSettled: () => navigate("/login", { replace: true }) });
@@ -173,26 +170,20 @@ export function AppLayout() {
                 <span className="font-semibold text-primary">{messages.login.brand}</span>
                 <span aria-hidden className="text-muted-foreground">/</span>
                 <span className="text-muted-foreground">
-                  {location.pathname === "/" ? messages.nav.home : messages.nav.ingredientManagement}
+                  {meta?.section ?? messages.nav.home}
                 </span>
               </div>
-              {/* <span className="flex items-center gap-2 text-sm">
-                <span aria-hidden className="flex size-8 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
-                  {session.data?.email?.slice(0, 1).toUpperCase()}
-                </span>
-                {session.data?.email}
-              </span> */}
             </>
           ) : isFormRoute ? (
             <div className="flex w-full items-center justify-between">
-              <Link to="/ingredients" aria-label={messages.ingredientForm.back} className="flex size-9 items-center justify-center">
+              <Link to={meta?.form?.backTo ?? "/"} aria-label={messages.ingredientForm.back} className="flex size-9 items-center justify-center">
                 <ArrowLeft aria-hidden className="size-5" />
               </Link>
               <span className="flex flex-1 items-center justify-center gap-2">
                 <span className="flex size-7 items-center justify-center rounded-lg bg-[#f9d8d2]">
                   <img src={logoIcon} alt="" className="size-4" />
                 </span>
-                <h1 className="font-display text-lg font-semibold">{formTitle}</h1>
+                <h1 className="font-display text-lg font-semibold">{meta?.form?.title}</h1>
               </span>
               <UserMenu email={session.data?.email} onLogout={onLogout} pending={logout.isPending} />
             </div>

@@ -1,33 +1,13 @@
 import type { Ingredient } from "@/api/types";
+import { collator, normalizeText } from "@/lib/catalog";
+
+export { categoryChips, normalizeText, paginate } from "@/lib/catalog";
+export type { CategoryChip, Page } from "@/lib/catalog";
 
 export type SortKey = "name" | "variation" | "recent";
 
-const collator = new Intl.Collator("pt-BR", { sensitivity: "base" });
-
-/** Lowercase and accent-free, so "acucar" finds "Açúcar". */
-export function normalizeText(text: string): string {
-  return text.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase();
-}
-
 export function availableIngredients(all: Ingredient[], showArchived: boolean): Ingredient[] {
   return showArchived ? all : all.filter((ingredient) => ingredient.active);
-}
-
-export interface CategoryChip {
-  id: string;
-  name: string;
-  count: number;
-}
-
-/** Chips follow the archived toggle but not the search, so they stay stable while typing. */
-export function categoryChips(items: Ingredient[]): CategoryChip[] {
-  const chips = new Map<string, CategoryChip>();
-  for (const { category } of items) {
-    const chip = chips.get(category.id) ?? { id: category.id, name: category.name, count: 0 };
-    chip.count += 1;
-    chips.set(category.id, chip);
-  }
-  return [...chips.values()].sort((a, b) => collator.compare(a.name, b.name));
 }
 
 export function filterIngredients(
@@ -64,20 +44,6 @@ const comparators: Record<SortKey, (a: Ingredient, b: Ingredient) => number> = {
 
 export function sortIngredients(items: Ingredient[], sort: SortKey): Ingredient[] {
   return [...items].sort(comparators[sort]);
-}
-
-export interface Page<T> {
-  items: T[];
-  page: number;
-  pageCount: number;
-  total: number;
-}
-
-export function paginate<T>(items: T[], page: number, pageSize: number): Page<T> {
-  const pageCount = Math.max(1, Math.ceil(items.length / pageSize));
-  const current = Math.min(Math.max(1, page), pageCount);
-  const start = (current - 1) * pageSize;
-  return { items: items.slice(start, start + pageSize), page: current, pageCount, total: items.length };
 }
 
 /** An archived ingredient with the same identity (name + brand, case-insensitive), as the server sees it. */

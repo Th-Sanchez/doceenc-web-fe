@@ -1,40 +1,13 @@
 import { z } from "zod";
 import { messages } from "@/i18n/messages";
-import { parseDecimal } from "@/lib/decimal";
+import { decimalField } from "@/lib/decimal-field";
 import { toIsoDate } from "@/lib/format";
 
 const v = messages.validation;
 
-function hasAtMostDecimals(value: number, decimals: number) {
-  const scaled = value * 10 ** decimals;
-  return Math.abs(scaled - Math.round(scaled)) < 1e-6;
-}
-
-/** The server stays the authority; these limits mirror it for fast feedback (and so the value fits the column). */
-function decimalField(max: number, decimals: number, maxMessage: string) {
-  return z
-    .string()
-    .trim()
-    .min(1, v.required)
-    .transform((text, ctx) => {
-      const value = parseDecimal(text);
-      const problem =
-        value === null ? v.decimalInvalid
-        : value < 0.01 ? v.min
-        : value > max ? maxMessage
-        : !hasAtMostDecimals(value, decimals) ? v.decimals(decimals)
-        : null;
-      if (problem !== null || value === null) {
-        ctx.addIssue({ code: "custom", message: problem ?? v.decimalInvalid });
-        return z.NEVER;
-      }
-      return value;
-    });
-}
-
 const priceFields = {
-  packagePrice: decimalField(99_999.99, 2, v.priceMax),
-  packageQuantity: decimalField(999_999.9999, 4, v.quantityMax),
+  packagePrice: decimalField({ min: 0.01, max: 99_999.99, decimals: 2, minMessage: v.min, maxMessage: v.priceMax }),
+  packageQuantity: decimalField({ min: 0.01, max: 999_999.9999, decimals: 4, minMessage: v.min, maxMessage: v.quantityMax }),
   purchasedOn: z
     .string()
     .min(1, v.required)
