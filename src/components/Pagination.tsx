@@ -8,14 +8,15 @@ interface Props {
   pageCount: number;
   shown: number;
   total: number;
+  summary?: (shown: number, total: number) => string;
   onChange: (page: number) => void;
 }
 
-export function Pagination({ page, pageCount, shown, total, onChange }: Props) {
+export function Pagination({ page, pageCount, shown, total, summary, onChange }: Props) {
   const t = messages.ingredients.pagination;
   return (
     <nav aria-label={t.label} className="flex flex-wrap items-center justify-between gap-3 text-sm text-muted-foreground">
-      <span>{t.summary(shown, total)}</span>
+      <span>{(summary ?? t.summary)(shown, total)}</span>
       <div className="flex items-center gap-2">
         <Button
           variant="outline"
