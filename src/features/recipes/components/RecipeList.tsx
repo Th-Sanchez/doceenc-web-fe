@@ -193,11 +193,11 @@ function CompactCard({ recipe, onRestore, restoring }: Omit<ListProps, "items" |
 }
 
 /** Mobile and tablet: compact cards, the whole card opens the sheet. */
-export function RecipeCompactList({ items, onRestore, restoring, onArchive }: ListProps) {
+export function RecipeCompactList({ items, onRestore, restoring }: ListProps) {
   return (
     <ul className="grid gap-3 sm:grid-cols-2">
       {items.map((recipe) => (
-        <CompactCard key={recipe.id} recipe={recipe} onRestore={onRestore} onArchive={onArchive} restoring={restoring} />
+        <CompactCard key={recipe.id} recipe={recipe} onRestore={onRestore} restoring={restoring} />
       ))}
     </ul>
   );

@@ -28,8 +28,7 @@ describe("toCreateBody", () => {
 
 describe("toUpdateBody", () => {
   it("never sends the yield unit", () => {
-    const { yieldUnit: _ignored, ...editValues } = values;
-    expect(toUpdateBody(editValues)).not.toHaveProperty("yieldUnit");
+    expect(toUpdateBody(values)).not.toHaveProperty("yieldUnit");
   });
 });
 

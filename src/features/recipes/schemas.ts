@@ -54,9 +54,6 @@ export const createSchema = z.object({
   items,
 });
 
-/** The yield unit is immutable once the recipe exists. */
-export const editSchema = createSchema.omit({ yieldUnit: true });
-
 /**
  * What the live cost needs: it may run with no lines yet (the server answers zeros) but never
  * with a half filled one, so an incomplete form simply yields no request.
@@ -68,6 +65,4 @@ export const simulationSchema = z.object({
 
 export type CreateRecipeFormInput = z.input<typeof createSchema>;
 export type CreateRecipeFormValues = z.output<typeof createSchema>;
-export type EditRecipeFormInput = z.input<typeof editSchema>;
-export type EditRecipeFormValues = z.output<typeof editSchema>;
 export type SimulationFormInput = z.input<typeof simulationSchema>;

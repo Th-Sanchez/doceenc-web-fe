@@ -4,12 +4,12 @@ import { messageForError } from "./messages";
 
 describe("messageForError", () => {
   it("translates known API error codes", () => {
-    const error = new ApiError(401, { code: "INVALID_CREDENTIALS" });
+    const error = new ApiError(401, {status: "", code: "INVALID_CREDENTIALS" });
     expect(messageForError(error)).toBe("E-mail ou senha inválidos.");
   });
 
   it("falls back to a generic message for unknown codes and missing problem bodies", () => {
-    expect(messageForError(new ApiError(400, { code: "SOMETHING_NEW" }))).toBe("Algo deu errado. Tente novamente.");
+    expect(messageForError(new ApiError(400, {status: "", code: "SOMETHING_NEW" }))).toBe("Algo deu errado. Tente novamente.");
     expect(messageForError(new ApiError(502))).toBe("Algo deu errado. Tente novamente.");
   });
 

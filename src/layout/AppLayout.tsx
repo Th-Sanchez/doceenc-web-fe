@@ -176,7 +176,7 @@ export function AppLayout() {
             </>
           ) : isFormRoute ? (
             <div className="flex w-full items-center justify-between">
-              <Link to={meta?.form?.backTo ?? "/"} aria-label={messages.ingredientForm.back} className="flex size-9 items-center justify-center">
+              <Link to={meta?.form?.backTo ?? "/"} aria-label={messages.nav.back} className="flex size-9 items-center justify-center">
                 <ArrowLeft aria-hidden className="size-5" />
               </Link>
               <span className="flex flex-1 items-center justify-center gap-2">

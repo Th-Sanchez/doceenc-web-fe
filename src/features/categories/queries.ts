@@ -1,22 +1,34 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/api/client";
+import type { Category } from "@/api/types";
 import { unwrap } from "@/api/unwrap";
 import { ingredientKeys } from "@/features/ingredients/queries";
 
+export type CategoryType = Category["type"];
+
 export const categoryKeys = {
   all: ["categories"] as const,
-  ingredient: () => [...categoryKeys.all, "INGREDIENT"] as const,
+  byType: (type: CategoryType) => [...categoryKeys.all, type] as const,
+  ingredient: () => categoryKeys.byType("INGREDIENT"),
+  recipe: () => categoryKeys.byType("RECIPE"),
 };
 
-export function useIngredientCategories(enabled = true) {
+export function useCategories(type: CategoryType, enabled = true) {
   return useQuery({
-    queryKey: categoryKeys.ingredient(),
-    queryFn: () => unwrap(api.GET("/api/v1/categories", { params: { query: { type: "INGREDIENT" } } })),
+    queryKey: categoryKeys.byType(type),
+    queryFn: () => unwrap(api.GET("/api/v1/categories", { params: { query: { type } } })),
     enabled,
   });
 }
 
-/** The ingredient list embeds each category's name, so it is refreshed together with the categories. */
+export const useIngredientCategories = (enabled = true) => useCategories("INGREDIENT", enabled);
+export const useRecipeCategories = (enabled = true) => useCategories("RECIPE", enabled);
+
+/**
+ * The ingredient list embeds each category's name, so it is refreshed together with the categories.
+ * Recipes embed it too, but recipe reads are never fresh (see recipes/queries.ts), so they pick the
+ * change up on their own and this feature does not need to know about recipes.
+ */
 function useCategoryMutation<TVariables, TResult>(request: (variables: TVariables) => Promise<TResult>) {
   const queryClient = useQueryClient();
   return useMutation({
@@ -29,10 +41,8 @@ function useCategoryMutation<TVariables, TResult>(request: (variables: TVariable
   });
 }
 
-export const useCreateCategory = () =>
-  useCategoryMutation((name: string) =>
-    unwrap(api.POST("/api/v1/categories", { body: { name, type: "INGREDIENT" } })),
-  );
+export const useCreateCategory = (type: CategoryType = "INGREDIENT") =>
+  useCategoryMutation((name: string) => unwrap(api.POST("/api/v1/categories", { body: { name, type } })));
 
 export const useRenameCategory = () =>
   useCategoryMutation(({ id, name }: { id: string; name: string }) =>

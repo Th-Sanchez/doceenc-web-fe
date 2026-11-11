@@ -1,10 +1,5 @@
 import type { CreateRecipeInput, SimulateRecipeInput, UpdateRecipeInput } from "@/api/types";
-import {
-  simulationSchema,
-  type CreateRecipeFormValues,
-  type EditRecipeFormValues,
-  type SimulationFormInput,
-} from "./schemas";
+import { simulationSchema, type CreateRecipeFormValues, type SimulationFormInput } from "./schemas";
 
 // Blank optional fields travel as absent: a PUT replaces the whole recipe, so absent clears them.
 const absentIfNull = (value: number | null) => value ?? undefined;
@@ -21,7 +16,8 @@ export function toCreateBody(values: CreateRecipeFormValues): CreateRecipeInput 
   };
 }
 
-export function toUpdateBody(values: EditRecipeFormValues): UpdateRecipeInput {
+/** The yield unit is immutable: it is in the form values but never travels on an update. */
+export function toUpdateBody(values: CreateRecipeFormValues): UpdateRecipeInput {
   return {
     name: values.name,
     categoryId: values.categoryId,

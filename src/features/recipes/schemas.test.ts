@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createSchema, editSchema, simulationSchema } from "./schemas";
+import { createSchema, simulationSchema } from "./schemas";
 
 const valid = {
   name: " Brigadeiro ",
@@ -70,15 +70,6 @@ describe("createSchema", () => {
 
   it("only accepts the known yield units", () => {
     expect(failedPaths(createSchema.safeParse({ ...valid, yieldUnit: "KILOGRAM" }))).toContain("yieldUnit");
-  });
-});
-
-describe("editSchema", () => {
-  it("does not ask for the yield unit", () => {
-    const { yieldUnit: _ignored, ...withoutUnit } = valid;
-    const parsed = editSchema.parse(withoutUnit);
-    expect(parsed).not.toHaveProperty("yieldUnit");
-    expect(parsed.yieldQuantity).toBe(40);
   });
 });
 

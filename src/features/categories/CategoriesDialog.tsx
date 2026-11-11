@@ -4,13 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { messageForError, messages } from "@/i18n/messages";
-import { useCreateCategory, useDeleteCategory, useIngredientCategories, useRenameCategory } from "./queries";
+import { useCreateCategory, useDeleteCategory, useCategories, useRenameCategory, type CategoryType } from "./queries";
 
 const t = messages.categoriesDialog;
 
-export function CategoriesDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
-  const categories = useIngredientCategories(open);
-  const create = useCreateCategory();
+export function CategoriesDialog({ open, onOpenChange, type = "INGREDIENT" }: { open: boolean; onOpenChange: (open: boolean) => void; type?: CategoryType }) {
+  const categories = useCategories(type, open);
+  const create = useCreateCategory(type);
   const rename = useRenameCategory();
   const remove = useDeleteCategory();
 
