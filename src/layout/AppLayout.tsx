@@ -23,7 +23,7 @@ const comingSoon = [
 ];
 const mobileItems = [...navItems, { label: messages.nav.productsShort, icon: Tag }];
 
-function Brand() {
+function Brand({ subtitle = messages.login.brandSubtitle }: { subtitle?: string }) {
   return (
     <div className="flex items-center gap-3">
       <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary">
@@ -31,9 +31,7 @@ function Brand() {
       </span>
       <span className="flex flex-col">
         <span className="font-display text-lg font-semibold leading-5 text-primary">{messages.login.brand}</span>
-        <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-          {messages.login.brandSubtitle}
-        </span>
+        <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{subtitle}</span>
       </span>
     </div>
   );
@@ -147,7 +145,7 @@ export function AppLayout() {
               <span aria-hidden className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
                 {session.data?.email?.slice(0, 1).toUpperCase()}
               </span>
-              <span title={session.data?.email} className="min-w-0 flex-1 text-sm leading-snug [overflow-wrap:anywhere]">
+              <span title={session.data?.email} className="min-w-0 flex-1 text-sm leading-snug wrap-anywhere">
                 <EmailText email={session.data?.email ?? ""} />
               </span>
             </div>
@@ -179,14 +177,14 @@ export function AppLayout() {
             </div>
           ) : (
             <>
-              <Brand />
+              <Brand subtitle={meta?.mobileSection} />
               <UserMenu email={session.data?.email} onLogout={onLogout} pending={logout.isPending} />
             </>
           )}
         </header>
         <main
           className={cn(
-            "mx-auto w-full max-w-[1280px] px-4",
+            "mx-auto w-full max-w-7xl px-4",
             isDesktop ? "py-6 lg:px-6" : "pb-28 pt-3",
             !isDesktop && isFormRoute && "pb-6",
           )}

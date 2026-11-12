@@ -132,7 +132,7 @@ function RecipeCard({ recipe, onArchive, onRestore, restoring }: ListProps & { r
 /** Desktop: roomy cards in a grid, with the actions on the card itself. */
 export function RecipeGrid(props: ListProps) {
   return (
-    <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+    <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {props.items.map((recipe) => (
         <RecipeCard key={recipe.id} recipe={recipe} {...props} />
       ))}

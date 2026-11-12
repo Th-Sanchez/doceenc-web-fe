@@ -6,15 +6,19 @@ interface FieldProps {
   id: string;
   label: string;
   hint?: string;
+  required?: boolean;
   error?: string;
   children: ReactNode;
 }
 
-export function Field({ id, label, hint, error, children }: FieldProps) {
+export function Field({ id, label, hint, required, error, children }: FieldProps) {
   return (
     <div className="flex flex-col gap-1.5">
       <div className="flex items-baseline justify-between gap-2">
-        <Label htmlFor={id}>{label}</Label>
+        <Label htmlFor={id}>
+          {label}
+          {required && <span aria-hidden="true" className="text-destructive after:content-['*']" />}
+        </Label>
         {hint && <span className="text-xs text-muted-foreground">{hint}</span>}
       </div>
       {children}

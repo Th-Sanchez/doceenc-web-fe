@@ -1,4 +1,4 @@
-import { Archive, Pencil, RotateCcw, TriangleAlert } from "lucide-react";
+import { Archive, ArrowLeft, Pencil, RotateCcw, TriangleAlert } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router";
 import type { Recipe } from "@/api/types";
@@ -25,6 +25,46 @@ function Kpi({ label, value }: { label: string; value: string }) {
   );
 }
 
+function CostDistribution({ recipe }: { recipe: Recipe }) {
+  if (recipe.totalCost <= 0 || recipe.items.length === 0) return null;
+
+  const colors = ["#8b274c", "#a53d5a", "#c47c84", "#dfbdba", "#6f524d"];
+  const segments = recipe.items.map((item, index) => {
+    const percent = (item.cost / recipe.totalCost) * 100;
+    const offset = recipe.items.slice(0, index).reduce((sum, previous) => sum + (previous.cost / recipe.totalCost) * 100, 0);
+    const segment = `${colors[index % colors.length]} ${offset}% ${offset + percent}%`;
+    return { item, percent, color: colors[index % colors.length], segment };
+  });
+
+  return (
+    <section aria-label={t.distribution.title} className="border-t pt-3">
+      <div className="mb-3 flex items-center justify-between">
+        <h3 className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">{t.distribution.title}</h3>
+        <span className="text-[10px] font-semibold">{t.distribution.all}</span>
+      </div>
+      <div className="flex items-center gap-3">
+        <div
+          role="img"
+          aria-label={t.distribution.chartLabel}
+          className="relative size-16 shrink-0 rounded-full"
+          style={{ background: `conic-gradient(${segments.map(({ segment }) => segment).join(", ")})` }}
+        >
+          <span aria-hidden className="absolute inset-2 rounded-full bg-card" />
+        </div>
+        <ul className="min-w-0 flex-1 space-y-1">
+          {segments.map(({ item, percent, color }) => (
+            <li key={item.ingredient.id} className="flex items-center gap-1.5 text-[10px]">
+              <span aria-hidden className="size-2 shrink-0 rounded-full" style={{ backgroundColor: color }} />
+              <span className="min-w-0 flex-1 truncate">{item.ingredient.name}</span>
+              <span className="shrink-0 font-semibold">{percent.toFixed(1).replace(".", ",")}%</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
 function RecipeSheet({ recipe }: { recipe: Recipe }) {
   const isDesktop = useMediaQuery("(min-width: 1024px)");
   const restore = useRestoreRecipe();
@@ -36,16 +76,21 @@ function RecipeSheet({ recipe }: { recipe: Recipe }) {
   return (
     <div className="flex flex-col gap-5">
       <nav aria-label={t.breadcrumb} className="hidden items-center gap-2 text-sm text-muted-foreground lg:flex">
+        <Link to="/recipes" aria-label={messages.nav.back} className="flex size-8 items-center justify-center rounded-full bg-muted hover:text-foreground">
+          <ArrowLeft aria-hidden className="size-4" />
+        </Link>
         <Link to="/recipes" className="hover:text-foreground">
           {t.breadcrumbRoot}
         </Link>
+        <span aria-hidden>/</span>
+        <span>{t.breadcrumbSection}</span>
         <span aria-hidden>/</span>
         <span aria-current="page" className="font-medium text-foreground">
           {recipe.name}
         </span>
       </nav>
 
-      <header className="flex flex-wrap items-start justify-between gap-4 rounded-xl border bg-card p-5 shadow-sm">
+      <header className="flex flex-wrap items-start justify-between gap-3 rounded-xl border bg-card p-4 shadow-sm">
         <div className="flex min-w-0 flex-col gap-2">
           <div className="flex items-center gap-2">
             <span className="rounded bg-[#efeeeb] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#554245]">
@@ -60,16 +105,16 @@ function RecipeSheet({ recipe }: { recipe: Recipe }) {
               {recipe.active ? t.statusActive : t.statusArchived}
             </span>
           </div>
-          <h1 className="font-display text-2xl font-bold sm:text-3xl">{recipe.name}</h1>
+          <h1 className="font-display text-2xl font-bold">{recipe.name}</h1>
         </div>
         <div className="flex flex-wrap gap-2">
           {recipe.active ? (
             <>
-              <Button variant="outline" onClick={() => setArchiving(true)}>
+              <Button variant="outline" size="sm" onClick={() => setArchiving(true)}>
                 <Archive aria-hidden className="size-4" />
                 {t.archive}
               </Button>
-              <Link to={`/recipes/${recipe.id}/edit`} className={buttonVariants()}>
+              <Link to={`/recipes/${recipe.id}/edit`} className={buttonVariants({ size: "sm" })}>
                 <Pencil aria-hidden className="size-4" />
                 {t.edit}
               </Link>
@@ -107,8 +152,8 @@ function RecipeSheet({ recipe }: { recipe: Recipe }) {
         <Kpi label={t.kpi.items} value={t.itemsCount(recipe.items.length)} />
       </dl>
 
-      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start">
-        <section aria-labelledby="composition-title" className="order-2 flex flex-col gap-3 lg:order-1">
+      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_16rem] lg:items-start">
+        <section aria-labelledby="composition-title" className="order-2 flex flex-col gap-3 rounded-xl border bg-card p-4 shadow-sm lg:order-1">
           <div className="flex flex-wrap items-start justify-between gap-2">
             <div>
               <h2 id="composition-title" className="text-lg font-semibold">
@@ -141,6 +186,7 @@ function RecipeSheet({ recipe }: { recipe: Recipe }) {
               {t.summary.calculatedBy(formatMoney(recipe.totalCost), yieldText)}
             </p>
           </div>
+          {isDesktop && <CostDistribution recipe={recipe} />}
         </aside>
       </div>
 

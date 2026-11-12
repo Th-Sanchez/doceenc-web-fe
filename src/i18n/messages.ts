@@ -143,6 +143,12 @@ export const messages = {
   recipeForm: {
     newTitle: "Nova Receita",
     editTitle: "Editar Receita",
+    stepsLabel: "Etapas da ficha técnica",
+    addIngredientsStep: "Folha Insumos",
+    creation: "Criação",
+    editing: "Edição",
+    chapterTitle: (title: string) => `Quadro 1: ${title}`,
+    duplicateNameSave: "Salvar Ficha Técnica (Corrija o nome duplicado)",
     back: "Receitas",
     subtitle: "Ficha técnica",
     basicsTitle: "Dados da Receita",
@@ -203,6 +209,7 @@ export const messages = {
     title: "Ficha da Receita",
     breadcrumb: "Você está em",
     breadcrumbRoot: "Receitas",
+    breadcrumbSection: "Fichas Técnicas",
     statusActive: "Ativa",
     statusArchived: "Arquivada",
     archive: "Arquivar Receita",
@@ -232,6 +239,11 @@ export const messages = {
       },
       active: "Ativo",
       archived: "Arquivado",
+    },
+    distribution: {
+      title: "Distribuição de custo",
+      all: "100% insumos",
+      chartLabel: "Proporção do custo por insumo",
     },
     summary: {
       eyebrow: "Fechamento de custos",

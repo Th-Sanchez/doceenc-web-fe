@@ -35,28 +35,28 @@ function Name({ item }: { item: Item }) {
 export function RecipeSheetTable({ items }: { items: Item[] }) {
   return (
     <div className="overflow-x-auto rounded-xl border">
-      <table className="w-full text-left text-sm">
+      <table className="w-full table-fixed text-left text-sm">
         <thead className="border-b bg-[#fbf9f6] text-[10px] uppercase tracking-wide text-muted-foreground">
           <tr>
-            <th scope="col" className="px-3 py-3 font-semibold">{t.columns.ingredient}</th>
-            <th scope="col" className="px-3 py-3 font-semibold">{t.columns.quantity}</th>
-            <th scope="col" className="px-3 py-3 font-semibold">{t.columns.baseCost}</th>
-            <th scope="col" className="px-3 py-3 font-semibold">{t.columns.cost}</th>
-            <th scope="col" className="px-3 py-3 font-semibold">{t.columns.status}</th>
+            <th scope="col" className="w-[30%] px-2 py-3 font-semibold">{t.columns.ingredient}</th>
+            <th scope="col" className="w-[16%] px-2 py-3 font-semibold">{t.columns.quantity}</th>
+            <th scope="col" className="w-[20%] px-2 py-3 font-semibold">{t.columns.baseCost}</th>
+            <th scope="col" className="w-[17%] px-2 py-3 font-semibold">{t.columns.cost}</th>
+            <th scope="col" className="w-[17%] px-2 py-3 font-semibold">{t.columns.status}</th>
           </tr>
         </thead>
         <tbody className="divide-y">
           {items.map((item) => (
             <tr key={item.ingredient.id} className={cn(!item.ingredient.active && "bg-amber-50/40")}>
-              <td className="px-3 py-3">
+              <td className="px-2 py-3">
                 <Name item={item} />
               </td>
-              <td className="whitespace-nowrap px-3 py-3">{formatQuantity(item.quantity, item.ingredient.baseUnit)}</td>
-              <td className="whitespace-nowrap px-3 py-3 text-muted-foreground">
+              <td className="whitespace-nowrap px-2 py-3">{formatQuantity(item.quantity, item.ingredient.baseUnit)}</td>
+              <td className="px-2 py-3 text-xs text-muted-foreground">
                 {formatUnitCost(item.ingredient.unitPrice, item.ingredient.baseUnit)}
               </td>
-              <td className="whitespace-nowrap px-3 py-3 font-semibold">{formatMoney(item.cost)}</td>
-              <td className="px-3 py-3">
+              <td className="whitespace-nowrap px-2 py-3 font-semibold">{formatMoney(item.cost)}</td>
+              <td className="px-2 py-3">
                 <StatusBadge active={item.ingredient.active} />
               </td>
             </tr>

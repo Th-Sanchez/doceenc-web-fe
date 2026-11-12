@@ -81,6 +81,8 @@ describe("new recipe", () => {
     const user = userEvent.setup();
     renderApp("/recipes/new");
 
+    expect(await screen.findByRole("navigation", { name: t.stepsLabel })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: t.chapterTitle(t.newTitle) })).toBeInTheDocument();
     await user.click(await screen.findByRole("button", { name: t.save }));
 
     expect(await screen.findByText(messages.validation.categoryRequired)).toBeInTheDocument();
@@ -100,6 +102,11 @@ describe("new recipe", () => {
     await user.click(screen.getByRole("button", { name: t.save }));
 
     expect(await screen.findByText("Já existe uma receita com este nome.")).toBeInTheDocument();
+    const disabledSave = screen.getByRole("button", { name: t.duplicateNameSave });
+    expect(disabledSave).toBeDisabled();
+
+    await user.type(screen.getByLabelText(t.name), " corrigido");
+    expect(screen.getByRole("button", { name: t.save })).toBeEnabled();
   });
 
   it("shows the server's refusal of an archived ingredient on the ingredient list", async () => {

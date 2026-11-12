@@ -5,6 +5,8 @@ export interface RouteMeta {
   pattern: string;
   /** Breadcrumb label on desktop. */
   section: string;
+  /** Short label shown below the brand on the mobile shell. */
+  mobileSection?: string;
   /** Pages with this swap the mobile header for "back + title" and hide the bottom navigation. */
   form?: { title: string; backTo: string };
 }
@@ -32,20 +34,23 @@ const routes: RouteMeta[] = [
     section: messages.nav.ingredientManagement,
     form: { title: messages.priceForm.title, backTo: "/ingredients" },
   },
-  { pattern: "/recipes", section: messages.nav.recipeBook },
+  { pattern: "/recipes", section: messages.nav.recipeBook, mobileSection: messages.nav.recipes },
   {
     pattern: "/recipes/new",
     section: messages.nav.recipeBook,
+    mobileSection: messages.nav.recipes,
     form: { title: messages.recipeForm.newTitle, backTo: "/recipes" },
   },
   {
     pattern: "/recipes/:id/edit",
     section: messages.nav.recipeBook,
+    mobileSection: messages.nav.recipes,
     form: { title: messages.recipeForm.editTitle, backTo: "/recipes" },
   },
   {
     pattern: "/recipes/:id",
     section: messages.nav.recipeBook,
+    mobileSection: messages.nav.recipes,
     form: { title: messages.recipeSheet.title, backTo: "/recipes" },
   },
 ];

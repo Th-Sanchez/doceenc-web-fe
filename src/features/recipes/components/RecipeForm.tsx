@@ -3,6 +3,7 @@ import { ArrowLeft, LockKeyhole, Plus, Save } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { Link } from "react-router";
+import { ApiError } from "@/api/problem";
 import type { Recipe } from "@/api/types";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
@@ -17,6 +18,7 @@ import { messages } from "@/i18n/messages";
 import { toInputText } from "@/lib/decimal";
 import { applyServerError, type ServerErrorMapping } from "@/lib/form-errors";
 import { useDebouncedValue } from "@/lib/use-debounced-value";
+import { useMediaQuery } from "@/lib/use-media-query";
 import { cn } from "@/lib/utils";
 import { toSimulationBody } from "../payload";
 import { useRecipeSimulation } from "../queries";
@@ -87,9 +89,11 @@ interface Props {
 export function RecipeForm({ recipe, pending, submitLabel, onSubmit }: Props) {
   const categories = useRecipeCategories();
   const catalog = useIngredients();
+  const isDesktop = useMediaQuery("(min-width: 1024px)");
   const [categoriesOpen, setCategoriesOpen] = useState(false);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+  const [duplicateName, setDuplicateName] = useState(false);
 
   const {
     register,
@@ -97,6 +101,7 @@ export function RecipeForm({ recipe, pending, submitLabel, onSubmit }: Props) {
     control,
     watch,
     setError,
+    clearErrors,
     formState: { errors },
   } = useForm<CreateRecipeFormInput, unknown, CreateRecipeFormValues>({
     resolver: zodResolver(createSchema),
@@ -105,6 +110,7 @@ export function RecipeForm({ recipe, pending, submitLabel, onSubmit }: Props) {
   const { fields, append, remove } = useFieldArray({ control, name: "items" });
 
   const unit = watch("yieldUnit");
+  const name = watch("name") ?? "";
   const yieldText = watch("yieldQuantity");
   const items = watch("items");
 
@@ -132,18 +138,23 @@ export function RecipeForm({ recipe, pending, submitLabel, onSubmit }: Props) {
   );
   const pickedIds = useMemo(() => new Set(items.map((item) => item.ingredientId)), [items]);
 
-  const fail = (error: unknown) => setFormError(applyServerError(error, setError, SERVER_ERRORS));
+  const fail = (error: unknown) => {
+    setDuplicateName(
+      error instanceof ApiError && ["RECIPE_ALREADY_EXISTS", "ARCHIVED_RECIPE_EXISTS"].includes(error.code ?? ""),
+    );
+    setFormError(applyServerError(error, setError, SERVER_ERRORS));
+  };
   const submit = handleSubmit((values) => {
     setFormError(null);
     onSubmit(values, fail);
   });
 
   const itemsError = errors.items?.root?.message ?? errors.items?.message;
-  const fieldClass = "h-[50px] rounded-xl border-0 bg-[#f5f3f0] text-sm";
+  const fieldClass = "h-10 rounded-xl border-0 bg-[#f5f3f0] text-sm sm:h-[50px]";
 
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-3 sm:gap-5">
-      <div className="flex items-center justify-between py-1">
+      <div className="hidden items-center justify-between py-1 lg:flex">
         <Link to="/recipes" className="flex items-center gap-1 text-sm font-semibold text-primary">
           <ArrowLeft aria-hidden className="size-4" />
           {t.back}
@@ -152,26 +163,75 @@ export function RecipeForm({ recipe, pending, submitLabel, onSubmit }: Props) {
       </div>
       <h1 className="hidden font-display text-2xl font-bold lg:block">{recipe ? t.editTitle : t.newTitle}</h1>
 
+      {!isDesktop && (
+        <>
+          <nav aria-label={t.stepsLabel} className="flex items-center gap-1 overflow-x-auto rounded-xl bg-muted p-1">
+            <span
+              aria-current={!recipe ? "step" : undefined}
+              aria-disabled={recipe ? "true" : undefined}
+              className={cn(
+                "shrink-0 rounded-lg px-2.5 py-2 text-[10px] font-medium",
+                !recipe ? "bg-primary font-semibold text-primary-foreground" : "text-muted-foreground",
+              )}
+            >
+              1. {t.newTitle}
+            </span>
+            <span
+              aria-current={recipe ? "step" : undefined}
+              aria-disabled={!recipe ? "true" : undefined}
+              className={cn(
+                "shrink-0 rounded-lg px-2.5 py-2 text-[10px] font-medium",
+                recipe ? "bg-primary font-semibold text-primary-foreground" : "text-muted-foreground",
+              )}
+            >
+              2. {t.editTitle}
+            </span>
+            <span aria-disabled="true" className="shrink-0 rounded-lg px-2.5 py-2 text-[10px] font-medium text-muted-foreground">
+              {t.addIngredientsStep}
+            </span>
+          </nav>
+          <div className="flex items-center justify-between">
+            <h1 className="font-display text-lg font-bold">{t.chapterTitle(recipe ? t.editTitle : t.newTitle)}</h1>
+            <span className="rounded-full bg-[#f9d8d2] px-2.5 py-1 text-[10px] font-semibold text-primary">
+              {recipe ? t.editing : t.creation}
+            </span>
+          </div>
+        </>
+      )}
+
       <form onSubmit={submit} noValidate className="flex flex-col gap-3 sm:gap-5">
         <div className="grid gap-3 sm:gap-5 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start">
           <div className="flex flex-col gap-3 sm:gap-5">
-            <section className="flex flex-col gap-5 rounded-2xl border border-[#eee8e5] bg-card p-3 shadow-sm sm:p-5">
+            <section className="flex flex-col gap-4 rounded-2xl border border-[#eee8e5] bg-card p-3 shadow-sm sm:gap-5 sm:p-5">
               <div>
                 <h2 className="text-base font-semibold">{t.basicsTitle}</h2>
                 <p className="text-xs text-muted-foreground">{t.basicsDescription}</p>
               </div>
 
-              <Field id="name" label={t.name} hint={messages.form.required} error={errors.name?.message}>
+              <Field
+                id="name"
+                label={t.name}
+                hint={`${name.length}/120`}
+                required
+                error={errors.name?.message}
+              >
                 <Input
                   placeholder={t.namePlaceholder}
                   maxLength={120}
                   className={fieldClass}
                   {...fieldProps("name", errors.name?.message)}
-                  {...register("name")}
+                  {...register("name", {
+                    onChange: () => {
+                      if (duplicateName) {
+                        setDuplicateName(false);
+                        clearErrors("name");
+                      }
+                    },
+                  })}
                 />
               </Field>
 
-              <Field id="categoryId" label={t.category} hint={messages.form.required} error={errors.categoryId?.message}>
+              <Field id="categoryId" label={t.category} required error={errors.categoryId?.message}>
                 <Select
                   // options arrive after mount on a cold load: remount so the select picks up the form's value
                   key={categories.isPending ? "loading" : "ready"}
@@ -197,18 +257,33 @@ export function RecipeForm({ recipe, pending, submitLabel, onSubmit }: Props) {
                 </button>
               </Field>
 
-              <Field id="yieldQuantity" label={t.yield} hint={messages.form.required} error={errors.yieldQuantity?.message}>
-                <div className="relative">
+              <Field id="yieldQuantity" label={t.yield} required error={errors.yieldQuantity?.message}>
+                <div className={recipe ? "relative" : "grid grid-cols-[minmax(0,1fr)_132px] gap-2"}>
                   <Input
                     inputMode="decimal"
                     autoComplete="off"
-                    className={cn(fieldClass, "pr-12")}
+                    className={cn(fieldClass, recipe && "pr-12")}
                     {...fieldProps("yieldQuantity", errors.yieldQuantity?.message)}
                     {...register("yieldQuantity")}
                   />
-                  <span aria-hidden className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
-                    {messages.units[unit]}
-                  </span>
+                  {recipe && (
+                    <span aria-hidden className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
+                      {messages.units[unit]}
+                    </span>
+                  )}
+                  {!recipe && (
+                    <fieldset className="grid grid-cols-3 gap-0.5 rounded-xl bg-[#f5f3f0] p-1">
+                      <legend className="sr-only">{t.yieldUnit}</legend>
+                      {BASE_UNITS.map((option) => (
+                        <label key={option} className="cursor-pointer">
+                          <input type="radio" value={option} className="peer sr-only" {...register("yieldUnit")} />
+                          <span className="flex h-full items-center justify-center rounded-lg px-1 text-xs font-medium text-muted-foreground peer-checked:bg-card peer-checked:text-primary peer-checked:shadow-sm peer-focus-visible:ring-2 peer-focus-visible:ring-ring">
+                            {messages.units[option]}
+                          </span>
+                        </label>
+                      ))}
+                    </fieldset>
+                  )}
                 </div>
               </Field>
 
@@ -223,27 +298,9 @@ export function RecipeForm({ recipe, pending, submitLabel, onSubmit }: Props) {
                     {t.yieldUnitLocked}
                   </p>
                 </div>
-              ) : (
-                <fieldset className="flex flex-col gap-1.5">
-                  <legend className="mb-1.5 text-sm font-medium">{t.yieldUnit}</legend>
-                  <div className="grid grid-cols-3 gap-1 rounded-xl bg-[#f5f3f0] p-1">
-                    {BASE_UNITS.map((option) => (
-                      <label key={option} className="cursor-pointer">
-                        <input type="radio" value={option} className="peer sr-only" {...register("yieldUnit")} />
-                        <span className="block rounded-lg px-2 py-2.5 text-center text-sm font-medium text-muted-foreground peer-checked:bg-card peer-checked:text-primary peer-checked:shadow-sm peer-focus-visible:ring-2 peer-focus-visible:ring-ring">
-                          {messages.units[option]}
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                  <p className="flex items-center gap-1 text-[11px] text-muted-foreground">
-                    <LockKeyhole aria-hidden className="size-3" />
-                    {t.yieldUnitLocked}
-                  </p>
-                </fieldset>
-              )}
+              ) : null}
 
-              <div className="grid gap-5 sm:grid-cols-2">
+              <div className="grid grid-cols-2 gap-3 sm:gap-5">
                 <Field id="prepTimeMinutes" label={t.prep} hint={messages.form.optional} error={errors.prepTimeMinutes?.message}>
                   <Input
                     inputMode="numeric"
@@ -328,9 +385,9 @@ export function RecipeForm({ recipe, pending, submitLabel, onSubmit }: Props) {
         )}
 
         <div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
-          <Button type="submit" disabled={pending} className="h-12 w-full sm:w-auto">
-            <Save aria-hidden className="size-4" />
-            {pending ? messages.form.saving : submitLabel}
+          <Button type="submit" disabled={pending || duplicateName} className="h-12 w-full sm:w-auto">
+            {!duplicateName && <Save aria-hidden className="size-4" />}
+            {pending ? messages.form.saving : duplicateName ? t.duplicateNameSave : submitLabel}
           </Button>
           <Link
             to="/recipes"

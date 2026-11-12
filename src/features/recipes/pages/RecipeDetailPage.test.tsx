@@ -59,6 +59,9 @@ describe("recipe sheet", () => {
     expect(screen.getByText(plain(formatMoney(9.1)))).toBeInTheDocument();
     expect(screen.getByText(plain(formatRecipeUnitCostWithUnit(0.2275, "UNIT")))).toBeInTheDocument();
     expect(screen.getByText(plain(t.summary.calculatedBy(formatMoney(9.1), "40 un")))).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: t.distribution.chartLabel })).toBeInTheDocument();
+    expect(screen.getByText("86,8%")).toBeInTheDocument();
+    expect(screen.getByText("13,2%")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: t.edit })).toHaveAttribute("href", "/recipes/rec-1/edit");
   });
 
