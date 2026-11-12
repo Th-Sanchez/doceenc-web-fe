@@ -9,25 +9,19 @@ import { cn } from "@/lib/utils";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { routeMetaFor } from "./routeMeta";
 
-/** Each slice adds its entries here (recipes, products, settings...). */
+/** Each slice adds its entries here (products, settings...). */
 const navItems = [
   { to: "/", label: messages.nav.home, end: true, icon: Home },
   { to: "/ingredients", label: messages.nav.ingredients, end: false, icon: Package },
+  { to: "/recipes", label: messages.nav.recipes, end: false, icon: BookOpen },
 ];
-const plannedItems = [
-  { label: messages.nav.recipes, icon: BookOpen },
-  { label: messages.nav.products, icon: Tag },
-];
+const plannedItems = [{ label: messages.nav.products, icon: Tag }];
 const comingSoon = [
   { label: messages.nav.orders },
   { label: messages.nav.customers },
   { label: messages.nav.reports },
 ];
-const mobileItems = [
-  ...navItems,
-  { label: messages.nav.recipes, icon: BookOpen },
-  { label: messages.nav.productsShort, icon: Tag },
-];
+const mobileItems = [...navItems, { label: messages.nav.productsShort, icon: Tag }];
 
 function Brand() {
   return (
@@ -165,15 +159,11 @@ export function AppLayout() {
       <div className="flex min-w-0 flex-col">
         <header className="sticky top-0 z-10 flex h-14 items-center justify-between border-b bg-card px-4 lg:px-6">
           {isDesktop ? (
-            <>
-              <div className="flex items-center gap-2 text-sm">
-                <span className="font-semibold text-primary">{messages.login.brand}</span>
-                <span aria-hidden className="text-muted-foreground">/</span>
-                <span className="text-muted-foreground">
-                  {meta?.section ?? messages.nav.home}
-                </span>
-              </div>
-            </>
+            <div className="flex items-center gap-2 text-sm">
+              <span className="font-semibold text-primary">{messages.login.brand}</span>
+              <span aria-hidden className="text-muted-foreground">/</span>
+              <span className="text-muted-foreground">{meta?.section ?? messages.nav.home}</span>
+            </div>
           ) : isFormRoute ? (
             <div className="flex w-full items-center justify-between">
               <Link to={meta?.form?.backTo ?? "/"} aria-label={messages.nav.back} className="flex size-9 items-center justify-center">
@@ -193,7 +183,7 @@ export function AppLayout() {
               <UserMenu email={session.data?.email} onLogout={onLogout} pending={logout.isPending} />
             </>
           )}
-          </header>
+        </header>
         <main
           className={cn(
             "mx-auto w-full max-w-[1280px] px-4",
