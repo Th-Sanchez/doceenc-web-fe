@@ -173,6 +173,8 @@ export function RecipeForm({ recipe, pending, submitLabel, onSubmit }: Props) {
 
               <Field id="categoryId" label={t.category} hint={messages.form.required} error={errors.categoryId?.message}>
                 <Select
+                  // options arrive after mount on a cold load: remount so the select picks up the form's value
+                  key={categories.isPending ? "loading" : "ready"}
                   disabled={categories.isPending}
                   className={fieldClass}
                   {...fieldProps("categoryId", errors.categoryId?.message)}

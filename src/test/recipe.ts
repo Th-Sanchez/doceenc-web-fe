@@ -1,5 +1,5 @@
 import { http, HttpResponse } from "msw";
-import type { Recipe, RecipeSummary } from "@/api/types";
+import type { Recipe, RecipeSimulation, RecipeSummary, SimulateRecipeInput } from "@/api/types";
 import { API } from "./api";
 import { server } from "./server";
 
@@ -61,4 +61,39 @@ export function mockRecipes(list: RecipeSummary[]) {
 
 export function mockRecipe(recipe: Recipe) {
   server.use(http.get(`${API}/api/v1/recipes/${recipe.id}`, () => HttpResponse.json(recipe)));
+}
+
+export function simulationFixture(overrides: Partial<RecipeSimulation> = {}): RecipeSimulation {
+  return {
+    items: [
+      {
+        ingredient: {
+          id: "ing-1",
+          name: "Leite condensado",
+          brandSupplier: "Moça",
+          baseUnit: "GRAM",
+          active: true,
+          unitPrice: 0.02,
+        },
+        quantity: 395,
+        cost: 7.9,
+      },
+    ],
+    totalCost: 7.9,
+    costPerYieldUnit: 0.1975,
+    ...overrides,
+  };
+}
+
+/** Answers every simulation with `build(body)` and returns the list of bodies it received. */
+export function mockSimulation(build: (body: SimulateRecipeInput) => RecipeSimulation = () => simulationFixture()) {
+  const calls: SimulateRecipeInput[] = [];
+  server.use(
+    http.post(`${API}/api/v1/recipes/simulation`, async ({ request }) => {
+      const body = (await request.json()) as SimulateRecipeInput;
+      calls.push(body);
+      return HttpResponse.json(build(body));
+    }),
+  );
+  return calls;
 }

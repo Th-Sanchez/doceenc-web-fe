@@ -43,6 +43,11 @@ const routes: RouteMeta[] = [
     section: messages.nav.recipeBook,
     form: { title: messages.recipeForm.editTitle, backTo: "/recipes" },
   },
+  {
+    pattern: "/recipes/:id",
+    section: messages.nav.recipeBook,
+    form: { title: messages.recipeSheet.title, backTo: "/recipes" },
+  },
 ];
 
 export function routeMetaFor(pathname: string): RouteMeta | null {

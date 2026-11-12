@@ -18,6 +18,14 @@ describe("routeMetaFor", () => {
     expect(routeMetaFor("/ingredients/abc-123/price")?.form?.title).toBe(messages.priceForm.title);
   });
 
+  it("describes the recipe pages", () => {
+    expect(routeMetaFor("/recipes")?.section).toBe(messages.nav.recipeBook);
+    expect(routeMetaFor("/recipes")?.form).toBeUndefined();
+    expect(routeMetaFor("/recipes/new")?.form).toEqual({ title: messages.recipeForm.newTitle, backTo: "/recipes" });
+    expect(routeMetaFor("/recipes/abc-123/edit")?.form?.title).toBe(messages.recipeForm.editTitle);
+    expect(routeMetaFor("/recipes/abc-123")?.form?.title).toBe(messages.recipeSheet.title);
+  });
+
   it("knows nothing about unknown paths", () => {
     expect(routeMetaFor("/nope")).toBeNull();
   });

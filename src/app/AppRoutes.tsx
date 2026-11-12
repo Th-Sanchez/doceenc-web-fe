@@ -1,4 +1,5 @@
 import { Route, Routes } from "react-router";
+import { RecipeDetailPage } from "@/features/recipes/pages/RecipeDetailPage";
 import { LoginPage } from "@/auth/LoginPage";
 import { RequireAuth } from "@/auth/RequireAuth";
 import { AppLayout } from "@/layout/AppLayout";
@@ -24,6 +25,7 @@ export function AppRoutes() {
           <Route path="ingredients/:id/edit" element={<EditIngredientPage />} />
           <Route path="ingredients/:id/price" element={<AdjustPricePage />} />
           <Route path="recipes" element={<RecipesPage />} />
+          <Route path="recipes/:id" element={<RecipeDetailPage />} />
           <Route path="recipes/new" element={<NewRecipePage />} />
           <Route path="recipes/:id/edit" element={<EditRecipePage />} />
         </Route>

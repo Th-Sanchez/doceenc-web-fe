@@ -13,7 +13,7 @@ export function NewRecipePage() {
       pending={create.isPending}
       submitLabel={messages.recipeForm.save}
       onSubmit={(values, fail) =>
-        create.mutate(toCreateBody(values), { onSuccess: () => navigate("/recipes"), onError: fail })
+        create.mutate(toCreateBody(values), { onSuccess: (recipe) => navigate(`/recipes/${recipe.id}`), onError: fail })
       }
     />
   );

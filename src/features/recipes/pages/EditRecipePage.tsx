@@ -46,7 +46,7 @@ function EditRecipe({ recipe }: { recipe: Recipe }) {
       onSubmit={(values, fail) =>
         update.mutate(
           { id: recipe.id, ...toUpdateBody(values) },
-          { onSuccess: () => navigate("/recipes"), onError: fail },
+          { onSuccess: () => navigate(`/recipes/${recipe.id}`), onError: fail },
         )
       }
     />

@@ -1,10 +1,9 @@
-import type { RecipeSummary } from "@/api/types";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogTitle } from "@/components/ui/dialog";
 import { messageForError, messages } from "@/i18n/messages";
 import { useArchiveRecipe } from "../queries";
 
-export function ArchiveRecipeDialog({ recipe, onClose }: { recipe: RecipeSummary | null; onClose: () => void }) {
+export function ArchiveRecipeDialog({ recipe, onClose }: { recipe: { id: string; name: string } | null; onClose: () => void }) {
   const archive = useArchiveRecipe();
   const t = messages.recipes.archiveDialog;
 
