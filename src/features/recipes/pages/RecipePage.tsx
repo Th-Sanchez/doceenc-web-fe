@@ -208,7 +208,7 @@ export function RecipesPage() {
       )}
 
       <ArchiveRecipeDialog recipe={toArchive} onClose={() => setToArchive(null)} />
-      <Link to="/recipes/new" className={cn(buttonVariants(), "fixed bottom-[76px] right-4 z-20 shadow-lg lg:hidden")}>
+      <Link to="/recipes/new" className={cn(buttonVariants(), "fixed bottom-19 right-4 z-20 shadow-lg lg:hidden")}>
         <Plus aria-hidden className="size-4" />
         {t.new}
       </Link>

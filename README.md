@@ -68,17 +68,161 @@ In production the frontend and the API must share the same site (for example `ap
 ## Project layout
 
 ```
-src/
-  api/       OpenAPI client, generated types, error model
-  app/       routes and query client wiring
-  assets/
-  auth/      session hooks, login page, route protection
-  components/ui/   shadcn/ui-style building blocks
-  i18n/      user-facing texts (pt-BR) and error-code mapping
-  layout/    app shell with navigation (each slice adds its entries)
-  lib/
-  pages/
-  test/      MSW server and test helpers
-  index.css
-  main.tsx
+.
+├── .github/
+│   └── workflows/
+│       └── ci.yml
+├── openapi/
+│   └── openapi.json
+├── scripts/
+│   └── sync-api.mjs
+├── src/
+│   ├── api/
+│   │   ├── client.test.ts
+│   │   ├── client.ts
+│   │   ├── problem.ts
+│   │   ├── schema.d.ts
+│   │   ├── types.ts
+│   │   └── unwrap.ts
+│   ├── app/
+│   │   ├── AppRoutes.tsx
+│   │   └── queryClient.ts
+│   ├── assets/
+│   │   ├── login-arrow.svg
+│   │   ├── login-audit.svg
+│   │   ├── login-back.svg
+│   │   ├── login-bakery.svg
+│   │   ├── login-cost.svg
+│   │   ├── login-email.svg
+│   │   ├── login-eye.svg
+│   │   ├── login-google.svg
+│   │   ├── login-heart.svg
+│   │   ├── login-hero.png
+│   │   ├── login-lock.svg
+│   │   ├── login-logo.svg
+│   │   ├── login-margin.svg
+│   │   ├── login-price.svg
+│   │   ├── login-quote.svg
+│   │   ├── login-secure.svg
+│   │   └── login-trend.svg
+│   ├── auth/
+│   │   ├── LoginPage.test.tsx
+│   │   ├── LoginPage.tsx
+│   │   ├── RequireAuth.test.tsx
+│   │   ├── RequireAuth.tsx
+│   │   └── session.ts
+│   ├── components/
+│   │   ├── ui/
+│   │   │   ├── button-variants.ts
+│   │   │   ├── button.tsx
+│   │   │   ├── card.tsx
+│   │   │   ├── dialog.tsx
+│   │   │   ├── dropdown-menu.tsx
+│   │   │   ├── field-props.ts
+│   │   │   ├── field.tsx
+│   │   │   ├── input.tsx
+│   │   │   ├── label.tsx
+│   │   │   ├── select.tsx
+│   │   │   └── switch.tsx
+│   │   ├── Chip.tsx
+│   │   └── Pagination.tsx
+│   ├── features/
+│   │   ├── categories/
+│   │   │   ├── CategoriesDialog.tsx
+│   │   │   └── queries.ts
+│   │   ├── ingredients/
+│   │   │   ├── components/
+│   │   │   │   ├── ArchiveDialog.tsx
+│   │   │   │   ├── IngredientActions.tsx
+│   │   │   │   ├── IngredientGate.tsx
+│   │   │   │   ├── IngredientList.tsx
+│   │   │   │   ├── PriceChart.tsx
+│   │   │   │   ├── PriceFields.tsx
+│   │   │   │   └── VariationBadge.tsx
+│   │   │   ├── pages/
+│   │   │   │   ├── AdjustPricePage.tsx
+│   │   │   │   ├── EditIngredientPage.tsx
+│   │   │   │   ├── IngredientForms.test.tsx
+│   │   │   │   ├── IngredientsPage.test.tsx
+│   │   │   │   ├── IngredientsPage.tsx
+│   │   │   │   └── NewIngredientPage.tsx
+│   │   │   ├── catalog.test.ts
+│   │   │   ├── catalog.ts
+│   │   │   ├── payloads.ts
+│   │   │   ├── queries.ts
+│   │   │   ├── schemas.test.ts
+│   │   │   ├── schemas.ts
+│   │   │   └── units.ts
+│   │   └── recipes/
+│   │       ├── components/
+│   │       │   ├── ArchiveRecipeDialog.tsx
+│   │       │   ├── CostSummary.tsx
+│   │       │   ├── IngredientPicker.tsx
+│   │       │   ├── RecipeActions.tsx
+│   │       │   ├── RecipeForm.tsx
+│   │       │   ├── RecipeGate.tsx
+│   │       │   ├── RecipeItemRow.tsx
+│   │       │   ├── RecipeList.tsx
+│   │       │   ├── RecipeSheetItems.tsx
+│   │       │   └── StatusSwitch.tsx
+│   │       ├── pages/
+│   │       │   ├── EditRecipePage.tsx
+│   │       │   ├── NewRecipePage.tsx
+│   │       │   ├── RecipeDetailPage.test.tsx
+│   │       │   ├── RecipeDetailPage.tsx
+│   │       │   ├── RecipeFormPage.test.tsx
+│   │       │   ├── RecipePage.test.tsx
+│   │       │   └── RecipePage.tsx
+│   │       ├── catalog.test.ts
+│   │       ├── catalog.ts
+│   │       ├── format.test.ts
+│   │       ├── format.ts
+│   │       ├── payload.test.ts
+│   │       ├── payload.ts
+│   │       ├── queries.ts
+│   │       ├── schemas.test.ts
+│   │       └── schemas.ts
+│   ├── i18n/
+│   │   ├── messages.test.ts
+│   │   └── messages.ts
+│   ├── layout/
+│   │   ├── AppLayout.tsx
+│   │   ├── routeMeta.test.ts
+│   │   └── routeMeta.ts
+│   ├── lib/
+│   │   ├── catalog.ts
+│   │   ├── decimal-field.test.ts
+│   │   ├── decimal-field.ts
+│   │   ├── decimal.test.ts
+│   │   ├── decimal.ts
+│   │   ├── form-errors.test.ts
+│   │   ├── form-errors.ts
+│   │   ├── format.test.ts
+│   │   ├── format.ts
+│   │   ├── use-debounced-value.ts
+│   │   ├── use-media-query.ts
+│   │   └── utils.ts
+│   ├── pages/
+│   │   ├── HomePage.tsx
+│   │   └── NotFoundPage.tsx
+│   ├── test/
+│   │   ├── api.ts
+│   │   ├── ingredients.ts
+│   │   ├── recipe.ts
+│   │   ├── render.tsx
+│   │   ├── server.ts
+│   │   ├── setup.ts
+│   │   └── viewport.ts
+│   ├── index.css
+│   └── main.tsx
+├── .env.example
+├── .gitignore
+├── eslint.config.js
+├── index.html
+├── package-lock.json
+├── package.json
+├── README.md
+├── tsconfig.json
+├── vercel.json
+└── vite.config.ts
 ```

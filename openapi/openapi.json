@@ -17,12 +17,60 @@
     }
   ],
   "paths": {
+    "/api/v1/settings": {
+      "get": {
+        "tags": [
+          "settings-controller"
+        ],
+        "operationId": "get",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SettingsResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "settings-controller"
+        ],
+        "operationId": "update",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSettingsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SettingsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/recipes/{id}": {
       "get": {
         "tags": [
           "recipe-controller"
         ],
-        "operationId": "get",
+        "operationId": "get_1",
         "parameters": [
           {
             "name": "id",
@@ -51,7 +99,7 @@
         "tags": [
           "recipe-controller"
         ],
-        "operationId": "update",
+        "operationId": "update_1",
         "parameters": [
           {
             "name": "id",
@@ -87,12 +135,82 @@
         }
       }
     },
+    "/api/v1/products/{id}": {
+      "get": {
+        "tags": [
+          "product-controller"
+        ],
+        "operationId": "get_2",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductDetailResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "product-controller"
+        ],
+        "operationId": "update_2",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProductRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductDetailResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/ingredients/{id}": {
       "put": {
         "tags": [
           "ingredient-controller"
         ],
-        "operationId": "update_1",
+        "operationId": "update_3",
         "parameters": [
           {
             "name": "id",
@@ -133,7 +251,7 @@
         "tags": [
           "category-controller"
         ],
-        "operationId": "update_2",
+        "operationId": "update_4",
         "parameters": [
           {
             "name": "id",
@@ -334,12 +452,155 @@
         }
       }
     },
+    "/api/v1/products": {
+      "get": {
+        "tags": [
+          "product-controller"
+        ],
+        "operationId": "list_1",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductSummaryResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "product-controller"
+        ],
+        "operationId": "create_1",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProductRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductDetailResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/products/{id}/restore": {
+      "post": {
+        "tags": [
+          "product-controller"
+        ],
+        "operationId": "restore_1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductDetailResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/products/{id}/archive": {
+      "post": {
+        "tags": [
+          "product-controller"
+        ],
+        "operationId": "archive_1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductDetailResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/products/simulation": {
+      "post": {
+        "tags": [
+          "product-controller"
+        ],
+        "operationId": "simulate_1",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimulateProductRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductSimulationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/ingredients": {
       "get": {
         "tags": [
           "ingredient-controller"
         ],
-        "operationId": "list_1",
+        "operationId": "list_2",
         "parameters": [
           {
             "name": "categoryId",
@@ -387,7 +648,7 @@
         "tags": [
           "ingredient-controller"
         ],
-        "operationId": "create_1",
+        "operationId": "create_2",
         "requestBody": {
           "content": {
             "application/json": {
@@ -417,7 +678,7 @@
         "tags": [
           "ingredient-controller"
         ],
-        "operationId": "restore_1",
+        "operationId": "restore_2",
         "parameters": [
           {
             "name": "id",
@@ -521,7 +782,7 @@
         "tags": [
           "ingredient-controller"
         ],
-        "operationId": "archive_1",
+        "operationId": "archive_2",
         "parameters": [
           {
             "name": "id",
@@ -552,7 +813,7 @@
         "tags": [
           "category-controller"
         ],
-        "operationId": "list_2",
+        "operationId": "list_3",
         "parameters": [
           {
             "name": "type",
@@ -587,7 +848,7 @@
         "tags": [
           "category-controller"
         ],
-        "operationId": "create_2",
+        "operationId": "create_3",
         "requestBody": {
           "content": {
             "application/json": {
@@ -675,6 +936,43 @@
   },
   "components": {
     "schemas": {
+      "UpdateSettingsRequest": {
+        "type": "object",
+        "properties": {
+          "targetMarginRetail": {
+            "type": "number",
+            "minimum": 0
+          },
+          "targetMarginWholesale": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "targetMarginRetail",
+          "targetMarginWholesale"
+        ]
+      },
+      "SettingsResponse": {
+        "type": "object",
+        "properties": {
+          "targetMarginRetail": {
+            "type": "number"
+          },
+          "targetMarginWholesale": {
+            "type": "number"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "targetMarginRetail",
+          "targetMarginWholesale",
+          "updatedAt"
+        ]
+      },
       "RecipeItemRequest": {
         "type": "object",
         "properties": {
@@ -884,6 +1182,269 @@
           "cost",
           "ingredient",
           "quantity"
+        ]
+      },
+      "ProductItemRequest": {
+        "type": "object",
+        "properties": {
+          "ingredientId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "quantity": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          }
+        },
+        "required": [
+          "ingredientId",
+          "quantity"
+        ]
+      },
+      "UpdateProductRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 0
+          },
+          "recipeId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "recipeQuantity": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "retailPrice": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "wholesalePrice": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductItemRequest"
+            }
+          }
+        },
+        "required": [
+          "items",
+          "name",
+          "recipeId",
+          "recipeQuantity"
+        ]
+      },
+      "ChannelPricingResponse": {
+        "type": "object",
+        "properties": {
+          "targetMarginPercent": {
+            "type": "number"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "NO_PRICE",
+              "LOSS",
+              "BELOW_TARGET",
+              "ON_TARGET"
+            ]
+          },
+          "price": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "grossProfit": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "marginPercent": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "suggestedPrice": {
+            "type": [
+              "number",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "grossProfit",
+          "marginPercent",
+          "price",
+          "status",
+          "suggestedPrice",
+          "targetMarginPercent"
+        ]
+      },
+      "ProductCostResponse": {
+        "type": "object",
+        "properties": {
+          "recipeCost": {
+            "type": "number"
+          },
+          "extrasCost": {
+            "type": "number"
+          },
+          "totalCost": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "extrasCost",
+          "recipeCost",
+          "totalCost"
+        ]
+      },
+      "ProductDetailResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "recipe": {
+            "$ref": "#/components/schemas/ProductRecipeResponse"
+          },
+          "recipeQuantity": {
+            "type": "number"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductItemResponse"
+            }
+          },
+          "archivedIngredientCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cost": {
+            "$ref": "#/components/schemas/ProductCostResponse"
+          },
+          "retail": {
+            "$ref": "#/components/schemas/ChannelPricingResponse"
+          },
+          "wholesale": {
+            "$ref": "#/components/schemas/ChannelPricingResponse"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "active",
+          "archivedIngredientCount",
+          "cost",
+          "createdAt",
+          "id",
+          "items",
+          "name",
+          "recipe",
+          "recipeQuantity",
+          "retail",
+          "updatedAt",
+          "wholesale"
+        ]
+      },
+      "ProductItemResponse": {
+        "type": "object",
+        "properties": {
+          "ingredientId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "baseUnit": {
+            "type": "string",
+            "enum": [
+              "GRAM",
+              "MILLILITER",
+              "UNIT"
+            ]
+          },
+          "ingredientActive": {
+            "type": "boolean"
+          },
+          "quantity": {
+            "type": "number"
+          },
+          "unitPrice": {
+            "type": "number"
+          },
+          "cost": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "baseUnit",
+          "cost",
+          "ingredientActive",
+          "ingredientId",
+          "name",
+          "quantity",
+          "unitPrice"
+        ]
+      },
+      "ProductRecipeResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "yieldQuantity": {
+            "type": "number"
+          },
+          "yieldUnit": {
+            "type": "string",
+            "enum": [
+              "GRAM",
+              "MILLILITER",
+              "UNIT"
+            ]
+          },
+          "costPerYieldUnit": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "active",
+          "costPerYieldUnit",
+          "id",
+          "name",
+          "yieldQuantity",
+          "yieldUnit"
         ]
       },
       "UpdateIngredientRequest": {
@@ -1120,6 +1681,106 @@
           "totalCost"
         ]
       },
+      "CreateProductRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 0
+          },
+          "recipeId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "recipeQuantity": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "retailPrice": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "wholesalePrice": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductItemRequest"
+            }
+          }
+        },
+        "required": [
+          "items",
+          "name",
+          "recipeId",
+          "recipeQuantity"
+        ]
+      },
+      "SimulateProductRequest": {
+        "type": "object",
+        "properties": {
+          "recipeId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "recipeQuantity": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "retailPrice": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "wholesalePrice": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductItemRequest"
+            }
+          }
+        },
+        "required": [
+          "items",
+          "recipeId",
+          "recipeQuantity"
+        ]
+      },
+      "ProductSimulationResponse": {
+        "type": "object",
+        "properties": {
+          "recipe": {
+            "$ref": "#/components/schemas/ProductRecipeResponse"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductItemResponse"
+            }
+          },
+          "cost": {
+            "$ref": "#/components/schemas/ProductCostResponse"
+          },
+          "retail": {
+            "$ref": "#/components/schemas/ChannelPricingResponse"
+          },
+          "wholesale": {
+            "$ref": "#/components/schemas/ChannelPricingResponse"
+          }
+        },
+        "required": [
+          "cost",
+          "items",
+          "recipe",
+          "retail",
+          "wholesale"
+        ]
+      },
       "CreateIngredientRequest": {
         "type": "object",
         "properties": {
@@ -1308,6 +1969,51 @@
           "updatedAt",
           "yieldQuantity",
           "yieldUnit"
+        ]
+      },
+      "ProductSummaryResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "recipe": {
+            "$ref": "#/components/schemas/ProductRecipeResponse"
+          },
+          "recipeQuantity": {
+            "type": "number"
+          },
+          "archivedIngredientCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cost": {
+            "$ref": "#/components/schemas/ProductCostResponse"
+          },
+          "retail": {
+            "$ref": "#/components/schemas/ChannelPricingResponse"
+          },
+          "wholesale": {
+            "$ref": "#/components/schemas/ChannelPricingResponse"
+          }
+        },
+        "required": [
+          "active",
+          "archivedIngredientCount",
+          "cost",
+          "id",
+          "name",
+          "recipe",
+          "recipeQuantity",
+          "retail",
+          "wholesale"
         ]
       },
       "PriceHistoryResponse": {

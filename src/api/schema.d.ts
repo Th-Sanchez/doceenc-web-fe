@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-    "/api/v1/recipes/{id}": {
+    "/api/v1/settings": {
         parameters: {
             query?: never;
             header?: never;
@@ -20,6 +20,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/recipes/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["get_1"];
+        put: operations["update_1"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/products/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["get_2"];
+        put: operations["update_2"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/ingredients/{id}": {
         parameters: {
             query?: never;
@@ -28,7 +60,7 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
-        put: operations["update_1"];
+        put: operations["update_3"];
         post?: never;
         delete?: never;
         options?: never;
@@ -44,7 +76,7 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
-        put: operations["update_2"];
+        put: operations["update_4"];
         post?: never;
         delete: operations["delete"];
         options?: never;
@@ -116,7 +148,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/ingredients": {
+    "/api/v1/products": {
         parameters: {
             query?: never;
             header?: never;
@@ -132,7 +164,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/ingredients/{id}/restore": {
+    "/api/v1/products/{id}/restore": {
         parameters: {
             query?: never;
             header?: never;
@@ -142,6 +174,70 @@ export interface paths {
         get?: never;
         put?: never;
         post: operations["restore_1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/products/{id}/archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["archive_1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/products/simulation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["simulate_1"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/ingredients": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["list_2"];
+        put?: never;
+        post: operations["create_2"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/ingredients/{id}/restore": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["restore_2"];
         delete?: never;
         options?: never;
         head?: never;
@@ -173,7 +269,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        post: operations["archive_1"];
+        post: operations["archive_2"];
         delete?: never;
         options?: never;
         head?: never;
@@ -187,9 +283,9 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["list_2"];
+        get: operations["list_3"];
         put?: never;
-        post: operations["create_2"];
+        post: operations["create_3"];
         delete?: never;
         options?: never;
         head?: never;
@@ -251,6 +347,16 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        UpdateSettingsRequest: {
+            targetMarginRetail: number;
+            targetMarginWholesale: number;
+        };
+        SettingsResponse: {
+            targetMarginRetail: number;
+            targetMarginWholesale: number;
+            /** Format: date-time */
+            updatedAt: string;
+        };
         RecipeItemRequest: {
             /** Format: uuid */
             ingredientId: string;
@@ -307,6 +413,73 @@ export interface components {
             ingredient: components["schemas"]["RecipeIngredientResponse"];
             quantity: number;
             cost: number;
+        };
+        ProductItemRequest: {
+            /** Format: uuid */
+            ingredientId: string;
+            quantity: number;
+        };
+        UpdateProductRequest: {
+            name: string;
+            /** Format: uuid */
+            recipeId: string;
+            recipeQuantity: number;
+            retailPrice?: number;
+            wholesalePrice?: number;
+            items: components["schemas"]["ProductItemRequest"][];
+        };
+        ChannelPricingResponse: {
+            targetMarginPercent: number;
+            /** @enum {string} */
+            status: "NO_PRICE" | "LOSS" | "BELOW_TARGET" | "ON_TARGET";
+            price: number | null;
+            grossProfit: number | null;
+            marginPercent: number | null;
+            suggestedPrice: number | null;
+        };
+        ProductCostResponse: {
+            recipeCost: number;
+            extrasCost: number;
+            totalCost: number;
+        };
+        ProductDetailResponse: {
+            /** Format: uuid */
+            id: string;
+            name: string;
+            active: boolean;
+            recipe: components["schemas"]["ProductRecipeResponse"];
+            recipeQuantity: number;
+            items: components["schemas"]["ProductItemResponse"][];
+            /** Format: int32 */
+            archivedIngredientCount: number;
+            cost: components["schemas"]["ProductCostResponse"];
+            retail: components["schemas"]["ChannelPricingResponse"];
+            wholesale: components["schemas"]["ChannelPricingResponse"];
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        ProductItemResponse: {
+            /** Format: uuid */
+            ingredientId: string;
+            name: string;
+            /** @enum {string} */
+            baseUnit: "GRAM" | "MILLILITER" | "UNIT";
+            ingredientActive: boolean;
+            quantity: number;
+            unitPrice: number;
+            cost: number;
+        };
+        ProductRecipeResponse: {
+            /** Format: uuid */
+            id: string;
+            name: string;
+            active: boolean;
+            yieldQuantity: number;
+            /** @enum {string} */
+            yieldUnit: "GRAM" | "MILLILITER" | "UNIT";
+            costPerYieldUnit: number;
         };
         UpdateIngredientRequest: {
             name: string;
@@ -367,6 +540,30 @@ export interface components {
             totalCost: number;
             costPerYieldUnit: number;
         };
+        CreateProductRequest: {
+            name: string;
+            /** Format: uuid */
+            recipeId: string;
+            recipeQuantity: number;
+            retailPrice?: number;
+            wholesalePrice?: number;
+            items: components["schemas"]["ProductItemRequest"][];
+        };
+        SimulateProductRequest: {
+            /** Format: uuid */
+            recipeId: string;
+            recipeQuantity: number;
+            retailPrice?: number;
+            wholesalePrice?: number;
+            items: components["schemas"]["ProductItemRequest"][];
+        };
+        ProductSimulationResponse: {
+            recipe: components["schemas"]["ProductRecipeResponse"];
+            items: components["schemas"]["ProductItemResponse"][];
+            cost: components["schemas"]["ProductCostResponse"];
+            retail: components["schemas"]["ChannelPricingResponse"];
+            wholesale: components["schemas"]["ChannelPricingResponse"];
+        };
         CreateIngredientRequest: {
             name: string;
             brandSupplier?: string;
@@ -418,6 +615,19 @@ export interface components {
             /** Format: date-time */
             updatedAt: string;
         };
+        ProductSummaryResponse: {
+            /** Format: uuid */
+            id: string;
+            name: string;
+            active: boolean;
+            recipe: components["schemas"]["ProductRecipeResponse"];
+            recipeQuantity: number;
+            /** Format: int32 */
+            archivedIngredientCount: number;
+            cost: components["schemas"]["ProductCostResponse"];
+            retail: components["schemas"]["ChannelPricingResponse"];
+            wholesale: components["schemas"]["ChannelPricingResponse"];
+        };
         PriceHistoryResponse: {
             /** Format: uuid */
             id: string;
@@ -464,6 +674,50 @@ export interface operations {
         parameters: {
             query?: never;
             header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["SettingsResponse"];
+                };
+            };
+        };
+    };
+    update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateSettingsRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["SettingsResponse"];
+                };
+            };
+        };
+    };
+    get_1: {
+        parameters: {
+            query?: never;
+            header?: never;
             path: {
                 id: string;
             };
@@ -482,7 +736,7 @@ export interface operations {
             };
         };
     };
-    update: {
+    update_1: {
         parameters: {
             query?: never;
             header?: never;
@@ -508,7 +762,55 @@ export interface operations {
             };
         };
     };
-    update_1: {
+    get_2: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ProductDetailResponse"];
+                };
+            };
+        };
+    };
+    update_2: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateProductRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ProductDetailResponse"];
+                };
+            };
+        };
+    };
+    update_3: {
         parameters: {
             query?: never;
             header?: never;
@@ -534,7 +836,7 @@ export interface operations {
             };
         };
     };
-    update_2: {
+    update_4: {
         parameters: {
             query?: never;
             header?: never;
@@ -694,6 +996,118 @@ export interface operations {
     };
     list_1: {
         parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ProductSummaryResponse"][];
+                };
+            };
+        };
+    };
+    create_1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateProductRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ProductDetailResponse"];
+                };
+            };
+        };
+    };
+    restore_1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ProductDetailResponse"];
+                };
+            };
+        };
+    };
+    archive_1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ProductDetailResponse"];
+                };
+            };
+        };
+    };
+    simulate_1: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SimulateProductRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ProductSimulationResponse"];
+                };
+            };
+        };
+    };
+    list_2: {
+        parameters: {
             query?: {
                 categoryId?: string;
                 active?: boolean;
@@ -716,7 +1130,7 @@ export interface operations {
             };
         };
     };
-    create_1: {
+    create_2: {
         parameters: {
             query?: never;
             header?: never;
@@ -740,7 +1154,7 @@ export interface operations {
             };
         };
     };
-    restore_1: {
+    restore_2: {
         parameters: {
             query?: never;
             header?: never;
@@ -810,7 +1224,7 @@ export interface operations {
             };
         };
     };
-    archive_1: {
+    archive_2: {
         parameters: {
             query?: never;
             header?: never;
@@ -832,7 +1246,7 @@ export interface operations {
             };
         };
     };
-    list_2: {
+    list_3: {
         parameters: {
             query?: {
                 type?: "INGREDIENT" | "RECIPE";
@@ -854,7 +1268,7 @@ export interface operations {
             };
         };
     };
-    create_2: {
+    create_3: {
         parameters: {
             query?: never;
             header?: never;

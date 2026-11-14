@@ -415,8 +415,14 @@ const errorMessages: Record<string, string> = {
   RECIPE_ALREADY_EXISTS: "Já existe uma receita com este nome.",
   ARCHIVED_RECIPE_EXISTS: "Já existe uma receita arquivada com este nome. Restaure-a em vez de criar outra.",
   RECIPE_ARCHIVED: "Esta receita está arquivada. Restaure-a para poder editar.",
-  ARCHIVED_INGREDIENT_NOT_ALLOWED: "Um dos insumos está arquivado e não pode ser adicionado à receita.",
+  ARCHIVED_INGREDIENT_NOT_ALLOWED: "Um dos insumos está arquivado e não pode ser adicionado.",
   DUPLICATE_RECIPE_ITEM: "O mesmo insumo aparece mais de uma vez na receita.",
+  PRODUCT_NOT_FOUND: "Produto não encontrado.",
+  PRODUCT_ALREADY_EXISTS: "Já existe um produto com este nome.",
+  ARCHIVED_PRODUCT_EXISTS: "Já existe um produto arquivado com este nome. Restaure-o em vez de criar outro.",
+  PRODUCT_ARCHIVED: "Este produto está arquivado. Restaure-o para poder editar.",
+  ARCHIVED_RECIPE_NOT_ALLOWED: "A receita escolhida está arquivada e não pode ser usada em um produto.",
+  DUPLICATE_PRODUCT_ITEM: "O mesmo insumo aparece mais de uma vez no produto.",
 };
 
 const fallbackErrorMessage = "Algo deu errado. Tente novamente.";
