@@ -10,7 +10,21 @@ import { availableIngredients, filterIngredients, sortIngredients } from "@/feat
 import { messages } from "@/i18n/messages";
 import { formatUnitCost } from "@/lib/format";
 
-const t = messages.recipeForm.picker;
+/**
+ * The texts of the picker. The recipe form's are the default; the product form passes its own,
+ * so the dialog talks about what the person is actually adding.
+ */
+export interface PickerCopy {
+  title: string;
+  description: string;
+  searchLabel: string;
+  searchPlaceholder: string;
+  empty: string;
+  none: string;
+  noMatch: string;
+  createIngredient: string;
+  close: string;
+}
 
 interface BodyProps {
   /** The whole catalog (undefined while it loads). Archived ones are filtered out here. */
@@ -24,7 +38,7 @@ interface BodyProps {
  * Lives inside DialogContent, which Radix unmounts when it closes: the search starts empty every time
  * the picker opens, however it was closed (the parent can close it without Radix calling onOpenChange).
  */
-function PickerBody({ ingredients, excludedIds, onPick }: BodyProps) {
+function PickerBody({ ingredients, excludedIds, onPick, copy: t }: BodyProps & { copy: PickerCopy }) {
   const [search, setSearch] = useState("");
 
   const active = useMemo(() => availableIngredients(ingredients ?? [], false), [ingredients]);
@@ -103,15 +117,16 @@ function PickerBody({ ingredients, excludedIds, onPick }: BodyProps) {
 interface Props extends BodyProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  copy?: PickerCopy;
 }
 
-export function IngredientPicker({ open, onOpenChange, ...body }: Props) {
+export function IngredientPicker({ open, onOpenChange, copy = messages.recipeForm.picker, ...body }: Props) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[85vh] overflow-y-auto">
-        <DialogTitle>{t.title}</DialogTitle>
-        <DialogDescription>{t.description}</DialogDescription>
-        <PickerBody {...body} />
+        <DialogTitle>{copy.title}</DialogTitle>
+        <DialogDescription>{copy.description}</DialogDescription>
+        <PickerBody {...body} copy={copy} />
       </DialogContent>
     </Dialog>
   );

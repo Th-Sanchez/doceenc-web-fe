@@ -106,7 +106,7 @@ describe("new ingredient", () => {
     await fillNewIngredient(user);
     await user.click(screen.getByRole("button", { name: f.save }));
 
-    expect(await screen.findByText("O valor mínimo é 0,01.")).toBeInTheDocument();
+    expect(await screen.findByText("O valor está abaixo do mínimo permitido.")).toBeInTheDocument();
   });
 
   it("offers to restore an archived ingredient with the same identity", async () => {

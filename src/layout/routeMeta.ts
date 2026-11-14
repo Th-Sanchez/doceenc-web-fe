@@ -53,6 +53,24 @@ const routes: RouteMeta[] = [
     mobileSection: messages.nav.recipes,
     form: { title: messages.recipeSheet.title, backTo: "/recipes" },
   },
+  { pattern: "/products", section: messages.nav.pricing, mobileSection: messages.nav.products },
+  {
+    pattern: "/products/new",
+    section: messages.nav.pricing,
+    mobileSection: messages.nav.products,
+    form: { title: messages.productForm.newTitle, backTo: "/products" },
+  },
+  {
+    pattern: "/products/:id/edit",
+    section: messages.nav.pricing,
+    mobileSection: messages.nav.products,
+    form: { title: messages.productForm.editTitle, backTo: "/products" },
+  },
+  {
+    pattern: "/settings",
+    section: messages.nav.settings,
+    form: { title: messages.settings.title, backTo: "/" },
+  },
 ];
 
 export function routeMetaFor(pathname: string): RouteMeta | null {

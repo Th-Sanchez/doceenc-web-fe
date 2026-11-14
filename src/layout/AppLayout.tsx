@@ -1,4 +1,4 @@
-import { ArrowLeft, BookOpen, Home, LogOut, Package, Tag } from "lucide-react";
+import { ArrowLeft, BookOpen, Home, LogOut, Package, Settings, Tag } from "lucide-react";
 import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router";
 import logoIcon from "@/assets/login-logo.svg";
 import { useLogout, useSession } from "@/auth/session";
@@ -14,14 +14,17 @@ const navItems = [
   { to: "/", label: messages.nav.home, end: true, icon: Home },
   { to: "/ingredients", label: messages.nav.ingredients, end: false, icon: Package },
   { to: "/recipes", label: messages.nav.recipes, end: false, icon: BookOpen },
+  { to: "/products", label: messages.nav.products, end: false, icon: Tag },
 ];
-const plannedItems = [{ label: messages.nav.products, icon: Tag }];
 const comingSoon = [
   { label: messages.nav.orders },
   { label: messages.nav.customers },
   { label: messages.nav.reports },
 ];
-const mobileItems = [...navItems, { label: messages.nav.productsShort, icon: Tag }];
+const mobileItems = [
+  ...navItems.slice(0, 3),
+  { to: "/products", label: messages.nav.productsShort, end: false, icon: Tag },
+];
 
 function Brand({ subtitle = messages.login.brandSubtitle }: { subtitle?: string }) {
   return (
@@ -37,7 +40,7 @@ function Brand({ subtitle = messages.login.brandSubtitle }: { subtitle?: string 
   );
 }
 
-function UserMenu({ email, onLogout, pending }: { email: string | undefined; onLogout: () => void; pending: boolean }) {
+function UserMenu({ email, onLogout, onSettings, pending }: { email: string | undefined; onLogout: () => void; onSettings: () => void; pending: boolean }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -51,6 +54,7 @@ function UserMenu({ email, onLogout, pending }: { email: string | undefined; onL
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <p className="px-3 py-2 text-xs text-muted-foreground">{email}</p>
+        <DropdownMenuItem onSelect={onSettings}>{messages.nav.settings}</DropdownMenuItem>
         <DropdownMenuItem disabled={pending} onSelect={onLogout}>
           {messages.nav.logout}
         </DropdownMenuItem>
@@ -120,12 +124,6 @@ export function AppLayout() {
                 {label}
               </NavLink>
             ))}
-            {plannedItems.map(({ label, icon: Icon }) => (
-              <span key={label} aria-disabled="true" className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-muted-foreground">
-                <Icon aria-hidden className="size-4" />
-                {label}
-              </span>
-            ))}
           </nav>
           <div className="flex flex-col gap-1">
             <p className="px-3 pb-1 text-[11px] font-bold tracking-wider text-muted-foreground">{messages.nav.soon}</p>
@@ -148,6 +146,13 @@ export function AppLayout() {
               <span title={session.data?.email} className="min-w-0 flex-1 text-sm leading-snug wrap-anywhere">
                 <EmailText email={session.data?.email ?? ""} />
               </span>
+              <Link
+                to="/settings"
+                aria-label={messages.nav.settings}
+                className="flex size-8 shrink-0 items-center justify-center rounded-md text-muted-foreground hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <Settings aria-hidden className="size-4" />
+              </Link>
             </div>
             {logoutButton}
           </div>
@@ -173,12 +178,12 @@ export function AppLayout() {
                 </span>
                 <h1 className="font-display text-lg font-semibold">{meta?.form?.title}</h1>
               </span>
-              <UserMenu email={session.data?.email} onLogout={onLogout} pending={logout.isPending} />
+              <UserMenu email={session.data?.email} onLogout={onLogout} onSettings={() => navigate("/settings")} pending={logout.isPending} />
             </div>
           ) : (
             <>
               <Brand subtitle={meta?.mobileSection} />
-              <UserMenu email={session.data?.email} onLogout={onLogout} pending={logout.isPending} />
+              <UserMenu email={session.data?.email} onLogout={onLogout} onSettings={() => navigate("/settings")} pending={logout.isPending} />
             </>
           )}
         </header>
@@ -199,15 +204,6 @@ export function AppLayout() {
           className="fixed inset-x-0 bottom-0 z-10 flex justify-around border-t bg-card px-2 py-2"
         >
           {mobileItems.map((item) => {
-            if (!("to" in item)) {
-              const Icon = item.icon;
-              return (
-                <span key={item.label} aria-disabled="true" className="flex min-w-14 flex-col items-center gap-1 px-2 py-1.5 text-[10px] text-muted-foreground">
-                  <Icon aria-hidden className="size-5" />
-                  {item.label}
-                </span>
-              );
-            }
             const Icon = item.icon;
             return (
               <NavLink

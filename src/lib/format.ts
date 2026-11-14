@@ -14,6 +14,7 @@ const variation = new Intl.NumberFormat("pt-BR", {
   maximumFractionDigits: 1,
   signDisplay: "exceptZero",
 });
+const percent = new Intl.NumberFormat("pt-BR", { minimumFractionDigits: 0, maximumFractionDigits: 2 });
 
 export const formatMoney = (value: number) => money.format(value);
 
@@ -26,6 +27,8 @@ export const formatQuantity = (value: number, unit: BaseUnit) =>
 
 /** Variation in percent as sent by the API (20 means +20%). */
 export const formatVariation = (value: number) => `${variation.format(value)}%`;
+
+export const formatPercent = (value: number) => `${percent.format(value)}%`;
 
 export type Trend = "up" | "down" | "flat";
 

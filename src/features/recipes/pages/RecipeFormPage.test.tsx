@@ -119,7 +119,7 @@ describe("new recipe", () => {
     await user.click(screen.getByRole("button", { name: t.save }));
 
     expect(
-      await screen.findByText("Um dos insumos está arquivado e não pode ser adicionado à receita."),
+      await screen.findByText("Um dos insumos está arquivado e não pode ser adicionado."),
     ).toBeInTheDocument();
   });
 

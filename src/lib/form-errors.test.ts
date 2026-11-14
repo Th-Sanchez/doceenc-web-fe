@@ -17,7 +17,7 @@ describe("applyServerError", () => {
     });
 
     expect(applyServerError<Fields>(error, setError, mapping)).toBeNull();
-    expect(setError).toHaveBeenCalledWith("packagePrice", { type: "server", message: "O valor mínimo é 0,01." });
+    expect(setError).toHaveBeenCalledWith("packagePrice", { type: "server", message: "O valor está abaixo do mínimo permitido." });
   });
 
   it("places a business error on the field it belongs to", () => {
