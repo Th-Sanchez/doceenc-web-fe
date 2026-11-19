@@ -1,9 +1,9 @@
 import { Route, Routes } from "react-router";
+import { DashboardPage } from "@/features/dashboard/pages/DashboardPage";
 import { RecipeDetailPage } from "@/features/recipes/pages/RecipeDetailPage";
 import { LoginPage } from "@/auth/LoginPage";
 import { RequireAuth } from "@/auth/RequireAuth";
 import { AppLayout } from "@/layout/AppLayout";
-import { HomePage } from "@/pages/HomePage";
 import { NotFoundPage } from "@/pages/NotFoundPage";
 import { AdjustPricePage } from "@/features/ingredients/pages/AdjustPricePage";
 import { EditIngredientPage } from "@/features/ingredients/pages/EditIngredientPage";
@@ -28,7 +28,7 @@ export function AppRoutes() {
       <Route path="/login" element={<LoginPage />} />
       <Route element={<RequireAuth />}>
         <Route element={<AppLayout />}>
-          <Route index element={<HomePage />} />
+          <Route index element={<DashboardPage />} />
           <Route path="ingredients" element={<IngredientsPage />} />
           <Route path="ingredients/new" element={<NewIngredientPage />} />
           <Route path="ingredients/:id/edit" element={<EditIngredientPage />} />

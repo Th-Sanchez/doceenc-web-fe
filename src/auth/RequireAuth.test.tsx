@@ -6,6 +6,11 @@ import { API, mockSession, problem, USER_EMAIL } from "@/test/api";
 import { renderApp } from "@/test/render";
 import { server } from "@/test/server";
 import { mockViewport } from "@/test/viewport";
+import { mockDashboard } from "@/test/dashboard";
+
+beforeEach(() => {
+  mockDashboard();
+});
 
 describe("route protection", () => {
   it("redirects to the login page when nobody is logged in", async () => {

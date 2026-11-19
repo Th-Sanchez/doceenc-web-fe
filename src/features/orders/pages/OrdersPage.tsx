@@ -1,6 +1,6 @@
 import { CalendarDays, ChevronLeft, ChevronRight, CircleDollarSign, ClipboardList, Eye, Filter, MoreHorizontal, PackageCheck, Pencil, Plus, Search, Truck } from "lucide-react";
 import { useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate, useSearchParams } from "react-router";
 import { useQueries } from "@tanstack/react-query";
 import { api } from "@/api/client";
 import type { OrderPaymentStatus, OrderStatus, OrderSummary } from "@/api/types";
@@ -16,6 +16,7 @@ import { useMediaQuery } from "@/lib/use-media-query";
 import { unwrap } from "@/api/unwrap";
 import { OrderPaymentBadge, OrderStatusBadge } from "../components/OrderStatusBadge";
 import { orderKeys, type OrderListParams } from "../queries";
+import { parseOrderListShortcut } from "../listFilters";
 
 const t = messages.orders;
 const pageSize = 20;
@@ -95,7 +96,16 @@ export function OrdersPage() {
   const isDesktop = useMediaQuery("(min-width: 1024px)");
   const navigate = useNavigate();
   const customers = useCustomers();
-  const [view, setView] = useState(initialViewState);
+  const [searchParams] = useSearchParams();
+  const [view, setView] = useState<OrdersViewState>(() => {
+    const shortcut = parseOrderListShortcut(searchParams);
+    return {
+      ...initialViewState,
+      activeTab: shortcut.status ?? "ALL",
+      deliveryFrom: shortcut.deliveryFrom ?? "",
+      deliveryTo: shortcut.deliveryTo ?? "",
+    };
+  });
   const { activeTab, search, customerId, paymentStatus, fulfillmentType, deliveryFrom, deliveryTo, page, mobilePage } = view;
   const setFilter = <K extends keyof OrdersViewState>(key: K, value: OrdersViewState[K]) =>
     setView((current) => updateView(current, key, value));

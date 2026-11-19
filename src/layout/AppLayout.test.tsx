@@ -7,6 +7,11 @@ import { renderApp } from "@/test/render";
 import { server } from "@/test/server";
 import { mockViewport } from "@/test/viewport";
 import { messages } from "@/i18n/messages";
+import { mockDashboard } from "@/test/dashboard";
+
+beforeEach(() => {
+  mockDashboard();
+});
 
 describe("mobile navigation", () => {
   it("allows opening orders when there are no customers", async () => {

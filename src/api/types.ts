@@ -41,3 +41,4 @@ export type OrderCancellationInput = components["schemas"]["CancelRequest"];
 export type OrderPage = components["schemas"]["PageResponseOrderSummaryResponse"];
 export type Settings = components["schemas"]["SettingsResponse"];
 export type UpdateSettingsInput = components["schemas"]["UpdateSettingsRequest"];
+export type Dashboard = components["schemas"]["DashboardResponse"];

@@ -518,6 +518,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/dashboard": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Deliveries, sales, cash received and receivables for the home screen */
+        get: operations["get_5"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/auth/me": {
         parameters: {
             query?: never;
@@ -996,6 +1013,63 @@ export interface components {
             purchasedOn: string;
             /** Format: date-time */
             createdAt: string;
+        };
+        Bucket: {
+            amount: number;
+            /** Format: int64 */
+            ordersCount: number;
+        };
+        DashboardResponse: {
+            today: components["schemas"]["Today"];
+            thisWeek: components["schemas"]["Week"];
+            overdue: components["schemas"]["Overdue"];
+            month: components["schemas"]["Month"];
+            receivable: components["schemas"]["Receivable"];
+        };
+        Month: {
+            /** Format: date */
+            from: string;
+            /** Format: date */
+            to: string;
+            soldAmount: number;
+            receivedAmount: number;
+        };
+        Overdue: {
+            /** Format: date */
+            to: string;
+            /** Format: int64 */
+            ordersCount: number;
+        };
+        Receivable: {
+            amount: number;
+            /** Format: int64 */
+            ordersCount: number;
+            dueOnDelivery: components["schemas"]["Bucket"];
+            unpaidDelivered: components["schemas"]["Bucket"];
+        };
+        Today: {
+            /** Format: date */
+            date: string;
+            orders: components["schemas"]["TodayOrder"][];
+        };
+        TodayOrder: {
+            /** Format: uuid */
+            id: string;
+            /** Format: int64 */
+            orderNumber: number;
+            customerName: string;
+            /** @enum {string} */
+            fulfillmentType: "PICKUP" | "DELIVERY";
+            totalAmount: number;
+            balance: number;
+        };
+        Week: {
+            /** Format: date */
+            from: string;
+            /** Format: date */
+            to: string;
+            /** Format: int64 */
+            ordersCount: number;
         };
         MeResponse: {
             email: string;
@@ -2070,6 +2144,26 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    get_5: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["DashboardResponse"];
+                };
             };
         };
     };

@@ -297,9 +297,38 @@ export const messages = {
     createAccount: "Criar espaço doce gratuitamente",
     footerNote: "Feito com carinho para confeiteiras que valorizam seu trabalho artesanal.",
   },
-  home: {
+  dashboard: {
     title: "Bem-vinda!",
-    description: "Em breve você poderá cadastrar insumos, receitas e produtos por aqui.",
+    subtitle: "Entregas, vendas e valores a receber num só lugar.",
+    new: "Novo pedido",
+    loadError: "Não foi possível carregar o painel.",
+    retry: "Tentar novamente",
+    orders: (n: number) => `${n} ${n === 1 ? "pedido" : "pedidos"}`,
+    today: {
+      title: "Entregas de hoje",
+      empty: "Nenhuma entrega para hoje.",
+      paid: "Pago",
+      missing: (amount: string) => `Falta ${amount}`,
+      total: "Total do pedido",
+      open: (number: number) => `Abrir pedido ${number}`,
+    },
+    overdue: { title: "Atrasados", none: "Nenhum pedido atrasado", attention: "Precisa de atenção" },
+    week: { title: "Até domingo", range: (from: string, to: string) => `Período: ${from} a ${to}`, none: "Nenhum pedido até domingo" },
+    sold: { title: "Vendido no mês", help: (month: string) => `pedidos entregues em ${month}` },
+    received: {
+      title: "Recebido no mês",
+      help: (month: string) => `dinheiro que entrou em ${month}`,
+      negative: "As devoluções superaram os recebimentos do mês.",
+    },
+    receivable: {
+      title: "A receber",
+      onDelivery: "Na entrega",
+      unpaidDelivered: "Entregues e não pagos",
+    },
+    empty: {
+      title: "Tudo tranquilo por aqui",
+      description: "Quando você registrar pedidos, o resumo do dia, da semana e do mês aparece neste painel.",
+    },
   },
   notFound: { title: "Página não encontrada", back: "Voltar ao início" },
   sessionError: {

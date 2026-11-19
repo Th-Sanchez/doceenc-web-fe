@@ -6,6 +6,7 @@ import { API, mockSession, problem, USER_EMAIL } from "@/test/api";
 import { renderApp } from "@/test/render";
 import { server } from "@/test/server";
 import {mockViewport } from "@/test/viewport";
+import { mockDashboard } from "@/test/dashboard";
 
 async function fillAndSubmit(email: string, password: string) {
   const user = userEvent.setup();
@@ -13,6 +14,10 @@ async function fillAndSubmit(email: string, password: string) {
   if (password) await user.type(screen.getByLabelText("Sua senha secreta"), password);
   await user.click(screen.getByRole("button", { name: "Entrar na Confeitaria" }));
 }
+
+beforeEach(() => {
+  mockDashboard();
+});
 
 describe("LoginPage", () => {
   it("asks for the missing fields without calling the API", async () => {
