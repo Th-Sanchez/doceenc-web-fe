@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/react";
+import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { describe, expect, it } from "vitest";
@@ -22,10 +22,24 @@ describe("mobile navigation", () => {
     renderApp("/");
 
     const navigation = await screen.findByRole("navigation", { name: messages.nav.main });
+    const expectedTabs = [
+      messages.nav.home,
+      messages.nav.ingredients,
+      messages.nav.recipes,
+      messages.nav.productsShort,
+      messages.nav.customers,
+      messages.nav.ordersShort,
+    ];
+    for (const label of expectedTabs) {
+      expect(within(navigation).getByRole("link", { name: label })).toBeInTheDocument();
+    }
+
     await user.click(screen.getByRole("link", { name: messages.nav.ordersShort }));
 
     expect(await screen.findByRole("heading", { name: messages.orders.title })).toBeInTheDocument();
-    expect(navigation).toHaveTextContent(messages.nav.ordersShort);
+    for (const label of expectedTabs) {
+      expect(within(navigation).getByRole("link", { name: label })).toBeInTheDocument();
+    }
     expect(await screen.findByText(messages.orders.empty)).toBeInTheDocument();
   });
 });

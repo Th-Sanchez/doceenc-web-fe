@@ -24,9 +24,6 @@ const comingSoon = [
 const defaultMobileItems = [
   ...navItems.slice(0, 3),
   { to: "/products", label: messages.nav.productsShort, end: false, icon: Tag },
-  { to: "/orders", label: messages.nav.ordersShort, end: false, icon: ClipboardList },
-];
-const ordersMobileItems = [
   { to: "/customers", label: messages.nav.customers, end: false, icon: Users },
   { to: "/orders", label: messages.nav.ordersShort, end: false, icon: ClipboardList },
 ];
@@ -88,8 +85,6 @@ export function AppLayout() {
   // One layout at a time. Rendering both and hiding one with CSS would duplicate landmarks and
   // controls for assistive technology (and in tests, where no stylesheet is applied).
   const isDesktop = useMediaQuery("(min-width: 1024px)");
-  const isCustomerOrOrdersRoute =
-    location.pathname.startsWith("/customers") || location.pathname.startsWith("/orders");
   const meta = routeMetaFor(location.pathname);
   const isFormRoute = meta?.form !== undefined;
 
@@ -208,9 +203,9 @@ export function AppLayout() {
       {!isDesktop && !isFormRoute && (
         <nav
           aria-label={messages.nav.main}
-          className="fixed inset-x-0 bottom-0 z-10 flex justify-around border-t bg-card px-2 py-2"
+          className="fixed inset-x-0 bottom-0 z-10 flex border-t bg-card px-2 py-2"
         >
-          {(isCustomerOrOrdersRoute ? ordersMobileItems : defaultMobileItems).map((item) => {
+          {defaultMobileItems.map((item) => {
             const Icon = item.icon;
             return (
               <NavLink
@@ -219,7 +214,7 @@ export function AppLayout() {
                 end={item.end}
                 className={({ isActive }) =>
                   cn(
-                    "flex min-w-14 flex-col items-center gap-1 rounded-xl px-2 py-1.5 text-[10px] font-medium text-muted-foreground",
+                    "flex min-w-0 flex-1 flex-col items-center gap-1 whitespace-nowrap rounded-xl px-0 py-1.5 text-[10px] font-medium text-muted-foreground",
                     isActive && "bg-[#f9d8d2] text-primary",
                   )
                 }
