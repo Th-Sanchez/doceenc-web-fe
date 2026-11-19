@@ -24,7 +24,7 @@ const comingSoon = [
 const defaultMobileItems = [
   ...navItems.slice(0, 3),
   { to: "/products", label: messages.nav.productsShort, end: false, icon: Tag },
-  { to: "/customers", label: messages.nav.customers, end: false, icon: Users },
+  { to: "/orders", label: messages.nav.ordersShort, end: false, icon: ClipboardList },
 ];
 const ordersMobileItems = [
   { to: "/customers", label: messages.nav.customers, end: false, icon: Users },
@@ -88,7 +88,8 @@ export function AppLayout() {
   // One layout at a time. Rendering both and hiding one with CSS would duplicate landmarks and
   // controls for assistive technology (and in tests, where no stylesheet is applied).
   const isDesktop = useMediaQuery("(min-width: 1024px)");
-  const isOrdersRoute = location.pathname.startsWith("/orders");
+  const isCustomerOrOrdersRoute =
+    location.pathname.startsWith("/customers") || location.pathname.startsWith("/orders");
   const meta = routeMetaFor(location.pathname);
   const isFormRoute = meta?.form !== undefined;
 
@@ -209,7 +210,7 @@ export function AppLayout() {
           aria-label={messages.nav.main}
           className="fixed inset-x-0 bottom-0 z-10 flex justify-around border-t bg-card px-2 py-2"
         >
-          {(isOrdersRoute ? ordersMobileItems : defaultMobileItems).map((item) => {
+          {(isCustomerOrOrdersRoute ? ordersMobileItems : defaultMobileItems).map((item) => {
             const Icon = item.icon;
             return (
               <NavLink
