@@ -33,7 +33,16 @@ describe("routeMetaFor", () => {
       title: messages.customerForm.newTitle,
       backTo: "/customers",
     });
+
     expect(routeMetaFor("/customers/customer-1/edit")?.form?.title).toBe(messages.customerForm.editTitle);
+  });
+
+  it("describes the order pages", () => {
+    expect(routeMetaFor("/orders")?.section).toBe(messages.nav.orders);
+    expect(routeMetaFor("/orders")?.form).toBeUndefined();
+    expect(routeMetaFor("/orders/new")?.form).toEqual({ title: messages.orders.form.newTitle, backTo: "/orders" });
+    expect(routeMetaFor("/orders/order-1/edit")?.form?.title).toBe(messages.orders.form.editTitle);
+    expect(routeMetaFor("/orders/order-1")?.form?.title).toBe(messages.orders.detail.title);
   });
 
   it("knows nothing about unknown paths", () => {

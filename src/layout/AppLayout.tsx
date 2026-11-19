@@ -1,4 +1,4 @@
-import { ArrowLeft, BookOpen, Home, LogOut, Package, Settings, Tag, Users } from "lucide-react";
+import { ArrowLeft, BookOpen, ClipboardList, Home, LogOut, Package, Settings, Tag, Users } from "lucide-react";
 import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router";
 import logoIcon from "@/assets/login-logo.svg";
 import { useLogout, useSession } from "@/auth/session";
@@ -16,15 +16,19 @@ const navItems = [
   { to: "/recipes", label: messages.nav.recipes, end: false, icon: BookOpen },
   { to: "/products", label: messages.nav.products, end: false, icon: Tag },
   { to: "/customers", label: messages.nav.customers, end: false, icon: Users },
+  { to: "/orders", label: messages.nav.orders, end: false, icon: ClipboardList },
 ];
 const comingSoon = [
-  { label: messages.nav.orders },
   { label: messages.nav.reports },
 ];
-const mobileItems = [
+const defaultMobileItems = [
   ...navItems.slice(0, 3),
   { to: "/products", label: messages.nav.productsShort, end: false, icon: Tag },
   { to: "/customers", label: messages.nav.customers, end: false, icon: Users },
+];
+const ordersMobileItems = [
+  { to: "/customers", label: messages.nav.customers, end: false, icon: Users },
+  { to: "/orders", label: messages.nav.ordersShort, end: false, icon: ClipboardList },
 ];
 
 function Brand({ subtitle = messages.login.brandSubtitle }: { subtitle?: string }) {
@@ -84,6 +88,7 @@ export function AppLayout() {
   // One layout at a time. Rendering both and hiding one with CSS would duplicate landmarks and
   // controls for assistive technology (and in tests, where no stylesheet is applied).
   const isDesktop = useMediaQuery("(min-width: 1024px)");
+  const isOrdersRoute = location.pathname.startsWith("/orders");
   const meta = routeMetaFor(location.pathname);
   const isFormRoute = meta?.form !== undefined;
 
@@ -204,7 +209,7 @@ export function AppLayout() {
           aria-label={messages.nav.main}
           className="fixed inset-x-0 bottom-0 z-10 flex justify-around border-t bg-card px-2 py-2"
         >
-          {mobileItems.map((item) => {
+          {(isOrdersRoute ? ordersMobileItems : defaultMobileItems).map((item) => {
             const Icon = item.icon;
             return (
               <NavLink

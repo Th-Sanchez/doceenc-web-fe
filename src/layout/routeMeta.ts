@@ -79,6 +79,25 @@ const routes: RouteMeta[] = [
     mobileSection: messages.nav.customers,
     form: { title: messages.customerForm.editTitle, backTo: "/customers" },
   },
+  { pattern: "/orders", section: messages.nav.orders, mobileSection: messages.nav.orders },
+  {
+    pattern: "/orders/new",
+    section: messages.nav.orders,
+    mobileSection: messages.nav.orders,
+    form: { title: messages.orders.form.newTitle, backTo: "/orders" },
+  },
+  {
+    pattern: "/orders/:id/edit",
+    section: messages.nav.orders,
+    mobileSection: messages.nav.orders,
+    form: { title: messages.orders.form.editTitle, backTo: "/orders" },
+  },
+  {
+    pattern: "/orders/:id",
+    section: messages.nav.orders,
+    mobileSection: messages.nav.orders,
+    form: { title: messages.orders.detail.title, backTo: "/orders" },
+  },
   {
     pattern: "/settings",
     section: messages.nav.settings,
