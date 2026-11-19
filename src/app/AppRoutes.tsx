@@ -16,6 +16,8 @@ import { EditProductPage } from "@/features/products/pages/EditProductPage";
 import { NewProductPage } from "@/features/products/pages/NewProductPage";
 import { ProductsPage } from "@/features/products/pages/ProductsPage";
 import { SettingsPage } from "@/features/settings/pages/SettingsPage";
+import { CustomerFormPage } from "@/features/customers/pages/CustomerFormPage";
+import { CustomersPage } from "@/features/customers/pages/CustomersPage";
 
 export function AppRoutes() {
   return (
@@ -35,6 +37,9 @@ export function AppRoutes() {
           <Route path="products" element={<ProductsPage />} />
           <Route path="products/new" element={<NewProductPage />} />
           <Route path="products/:id/edit" element={<EditProductPage />} />
+          <Route path="customers" element={<CustomersPage />} />
+          <Route path="customers/new" element={<CustomerFormPage />} />
+          <Route path="customers/:id/edit" element={<CustomerFormPage />} />
           <Route path="settings" element={<SettingsPage />} />
         </Route>
       </Route>

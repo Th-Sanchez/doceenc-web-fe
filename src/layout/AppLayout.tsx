@@ -1,4 +1,4 @@
-import { ArrowLeft, BookOpen, Home, LogOut, Package, Settings, Tag } from "lucide-react";
+import { ArrowLeft, BookOpen, Home, LogOut, Package, Settings, Tag, Users } from "lucide-react";
 import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router";
 import logoIcon from "@/assets/login-logo.svg";
 import { useLogout, useSession } from "@/auth/session";
@@ -15,15 +15,16 @@ const navItems = [
   { to: "/ingredients", label: messages.nav.ingredients, end: false, icon: Package },
   { to: "/recipes", label: messages.nav.recipes, end: false, icon: BookOpen },
   { to: "/products", label: messages.nav.products, end: false, icon: Tag },
+  { to: "/customers", label: messages.nav.customers, end: false, icon: Users },
 ];
 const comingSoon = [
   { label: messages.nav.orders },
-  { label: messages.nav.customers },
   { label: messages.nav.reports },
 ];
 const mobileItems = [
   ...navItems.slice(0, 3),
   { to: "/products", label: messages.nav.productsShort, end: false, icon: Tag },
+  { to: "/customers", label: messages.nav.customers, end: false, icon: Users },
 ];
 
 function Brand({ subtitle = messages.login.brandSubtitle }: { subtitle?: string }) {

@@ -26,6 +26,16 @@ describe("routeMetaFor", () => {
     expect(routeMetaFor("/recipes/abc-123")?.form?.title).toBe(messages.recipeSheet.title);
   });
 
+  it("describes the customer pages", () => {
+    expect(routeMetaFor("/customers")?.section).toBe(messages.nav.customers);
+    expect(routeMetaFor("/customers")?.form).toBeUndefined();
+    expect(routeMetaFor("/customers/new")?.form).toEqual({
+      title: messages.customerForm.newTitle,
+      backTo: "/customers",
+    });
+    expect(routeMetaFor("/customers/customer-1/edit")?.form?.title).toBe(messages.customerForm.editTitle);
+  });
+
   it("knows nothing about unknown paths", () => {
     expect(routeMetaFor("/nope")).toBeNull();
   });
